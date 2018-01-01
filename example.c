@@ -57,6 +57,7 @@ static void print_sensor_data(struct psvr_sensor_frame *frame)
 	}
 }
 
+#if defined(_WIN32) || defined(_WIN64)
 void usleep(DWORD waitTime) {
 	LARGE_INTEGER perfCnt, start, now;
 
@@ -67,6 +68,7 @@ void usleep(DWORD waitTime) {
 		QueryPerformanceCounter((LARGE_INTEGER*)&now);
 	} while ((now.QuadPart - start.QuadPart) / (float)(perfCnt.QuadPart) * 1000 * 1000 < waitTime);
 }
+#endif
 
 int main(void)
 {
@@ -82,7 +84,6 @@ int main(void)
 	command_enable_vr_mode();
 
 	for (i = 0; i < 1000; i++) {
-		int p;
 		r = psvr_read_sensor_sync(ctx, (uint8_t *) &frame, sizeof (struct psvr_sensor_frame));
 		print_sensor_data(&frame);
 		usleep(10 * 1000);
