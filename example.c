@@ -17,7 +17,13 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include <unistd.h>
+
+#if !(defined(_WIN32) || defined(_WIN64))
+	#include <unistd.h>
+#else
+	#define WIN32_LEAN_AND_MEAN
+	#include <Windows.h>
+#endif
 
 #include "psvr.h"
 
@@ -49,6 +55,17 @@ static void print_sensor_data(struct psvr_sensor_frame *frame)
 			frame->data[i].gyro.yaw, frame->data[i].gyro.pitch, frame->data[i].gyro.roll,
 			frame->data[i].accel.x, frame->data[i].accel.y, frame->data[i].accel.z);
 	}
+}
+
+void usleep(DWORD waitTime) {
+	LARGE_INTEGER perfCnt, start, now;
+
+	QueryPerformanceFrequency(&perfCnt);
+	QueryPerformanceCounter(&start);
+
+	do {
+		QueryPerformanceCounter((LARGE_INTEGER*)&now);
+	} while ((now.QuadPart - start.QuadPart) / (float)(perfCnt.QuadPart) * 1000 * 1000 < waitTime);
 }
 
 int main(void)

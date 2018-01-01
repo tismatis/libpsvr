@@ -19,7 +19,14 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "libusb.h"
+#if (defined(_WIN32) || defined(_WIN64))
+	#include <stdint.h>
+	#include <libusb.h>
+	#define PSVRWIN
+#else
+	#include "libusb.h"
+#endif
+
 #include "psvr.h"
 #include "morpheus.h"
 
@@ -73,9 +80,10 @@ int psvr_open(psvr_context **ctx)
 	for (i = 0; i < _ctx->usb_descriptor->bNumInterfaces; i++) {
 		int mask = 1 << i;
 		if (INTERFACES_MASK_TO_CLAIM & mask) {
+		#ifndef PSVRWIN
 			err = libusb_kernel_driver_active(_ctx->usb_handle, i);
 			if (err < 0) {
-				printf("Interface #%d driver status failed\n", i);
+				printf("Interface #%d driver status failed - %i\n", i, err);
 				goto error;
 			}
 			if (err == 1) {
@@ -86,6 +94,7 @@ int psvr_open(psvr_context **ctx)
 					goto error;
 				}
 			}
+		#endif
 			err = libusb_claim_interface(_ctx->usb_handle, i);
 			if (err != LIBUSB_SUCCESS) {
 				printf("Interface #%d claim failed\n", i);
