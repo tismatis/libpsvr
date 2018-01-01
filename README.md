@@ -27,4 +27,7 @@ Requires the latest libusb to be installed.
 Paths are set to be one folder outside of master folder with the folder name of "libusb-master".  
 This can be changed if you wish.  
 To compile, use the solution in the LibPSVR folder.  
-Solution file is for Visual Studio 2017.
+Solution file is for Visual Studio 2017.  
+  
+To use PSVR with this, you must install WinUSB driver for the PS VR Sensors and PS VR Control, Interfaces 4 and 5 respectively.  
+You can use zadiag, which is referenced with libusb, to install the drivers.
