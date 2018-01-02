@@ -15,17 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
-#if (defined(_WIN32) || defined(_WIN64))
-	#include <stdint.h>
-	#include <libusb.h>
-	#define PSVRWIN
-#else
-	#include "libusb.h"
-#endif
+#include "PSVR_Common.h"
 
 #include "psvr.h"
 #include "morpheus.h"
@@ -42,26 +32,28 @@ struct psvr_context {
 	(1 << PSVR_INTERFACE_HID_CONTROL)\
 )
 
-int psvr_open(psvr_context **ctx)
-{
+int psvr_open(psvr_context **ctx) {
 	int i;
 	int err;
 	libusb_device *device;
 	psvr_context *_ctx = NULL;
 
-	_ctx = (psvr_context *) malloc(sizeof (psvr_context));
+	_ctx = (psvr_context *)malloc(sizeof(psvr_context));
 
-	memset(_ctx, 0, sizeof (psvr_context));
+	memset(_ctx, 0, sizeof(psvr_context));
 
-	if ((err = libusb_init(&_ctx->usb)) != LIBUSB_SUCCESS ) {
+	if ((err = libusb_init(&_ctx->usb)) != LIBUSB_SUCCESS) {
 		printf("Initialization Failed\n");
 		goto error;
 	}
 
 	libusb_set_debug(_ctx->usb, 3);
 
-	_ctx->usb_handle = libusb_open_device_with_vid_pid(_ctx->usb,
-		MORPHEUS_VID, MORPHEUS_PID);
+	_ctx->usb_handle = libusb_open_device_with_vid_pid(
+		_ctx->usb,
+		MORPHEUS_VID,
+		MORPHEUS_PID
+	);
 
 	if (_ctx->usb_handle == NULL) {
 		printf("Morpheous device not found\n");
@@ -70,9 +62,16 @@ int psvr_open(psvr_context **ctx)
 
 	device = libusb_get_device(_ctx->usb_handle);
 
-	if ((err = libusb_get_config_descriptor_by_value(device,
-		MORPHEUS_CONFIGURATION_PSVR, &_ctx->usb_descriptor))
-		!= LIBUSB_SUCCESS) {
+	if (
+		(
+			err = libusb_get_config_descriptor_by_value(
+				device,
+				MORPHEUS_CONFIGURATION_PSVR,
+				&_ctx->usb_descriptor
+			)
+		)
+		!= LIBUSB_SUCCESS
+	) {
 		printf("Get config descriptor failed\n");
 		goto error;
 	}
@@ -89,7 +88,7 @@ int psvr_open(psvr_context **ctx)
 			if (err == 1) {
 				printf("Detach kernel driver on interface #%d\n", i);
 				err = libusb_detach_kernel_driver(_ctx->usb_handle, i);
-	 			if (err != LIBUSB_SUCCESS) {
+				if (err != LIBUSB_SUCCESS) {
 					printf("Interface #%d detach failed\n", i);
 					goto error;
 				}
@@ -113,8 +112,89 @@ error:
 	return -1;
 }
 
-int psvr_send_command_sync(psvr_context *ctx, uint8_t id, uint8_t *payload, uint32_t length)
-{
+int psvr_open_ex(psvr_context **ctx, int interfaces_to_claim) {
+	int i;
+	int err;
+	libusb_device *device;
+	psvr_context *_ctx = NULL;
+
+	_ctx = (psvr_context *)malloc(sizeof(psvr_context));
+
+	memset(_ctx, 0, sizeof(psvr_context));
+
+	if ((err = libusb_init(&_ctx->usb)) != LIBUSB_SUCCESS) {
+		printf("Initialization Failed\n");
+		goto error;
+	}
+
+	libusb_set_debug(_ctx->usb, 3);
+
+	_ctx->usb_handle = libusb_open_device_with_vid_pid(
+		_ctx->usb,
+		MORPHEUS_VID,
+		MORPHEUS_PID
+	);
+
+	if (_ctx->usb_handle == NULL) {
+		printf("Morpheous device not found\n");
+		goto error;
+	}
+
+	device = libusb_get_device(_ctx->usb_handle);
+
+	if (
+		(
+			err = libusb_get_config_descriptor_by_value(
+				device,
+				MORPHEUS_CONFIGURATION_PSVR,
+				&_ctx->usb_descriptor
+			)
+		)
+		!= LIBUSB_SUCCESS
+	) {
+		printf("Get config descriptor failed\n");
+		goto error;
+	}
+
+	for (i = 0; i < _ctx->usb_descriptor->bNumInterfaces; i++) {
+		int mask = 1 << i;
+		if (interfaces_to_claim & mask) {
+		#ifndef PSVRWIN
+			err = libusb_kernel_driver_active(_ctx->usb_handle, i);
+			if (err < 0) {
+				printf("Interface #%d driver status failed - %i\n", i, err);
+				goto error;
+			}
+			if (err == 1) {
+				printf("Detach kernel driver on interface #%d\n", i);
+				err = libusb_detach_kernel_driver(_ctx->usb_handle, i);
+				if (err != LIBUSB_SUCCESS) {
+					printf("Interface #%d detach failed\n", i);
+					goto error;
+				}
+			}
+		#endif
+			err = libusb_claim_interface(_ctx->usb_handle, i);
+			if (err != LIBUSB_SUCCESS) {
+				printf("Interface #%d claim failed\n", i);
+				goto error;
+			}
+			_ctx->claimed_interfaces |= mask;
+		}
+	}
+
+	*ctx = _ctx;
+
+	return 0;
+
+error:
+	psvr_close(_ctx);
+	return -1;
+}
+
+int psvr_send_sync(enum morpheus_usb_interfaces interface, psvr_context *ctx, enum psvr_report_id id, uint8_t *payload, uint32_t length) {
+	if (!(ctx->claimed_interfaces & (1 << interface))) return; //only execute if we have claimed the interface
+
 	struct morpheus_control_command command;
 	int ep;
 	int xferred;
@@ -125,32 +205,45 @@ int psvr_send_command_sync(psvr_context *ctx, uint8_t id, uint8_t *payload, uint
 	command.header.length = length;
 	memcpy(command.payload, payload, length);
 
-	ep = ctx->usb_descriptor->interface[PSVR_INTERFACE_HID_CONTROL]
+	ep = ctx->usb_descriptor->interface[interface]
 		.altsetting[0]
 		.endpoint[0]
 		.bEndpointAddress;
 	ep &= ~ENDPOINT_IN;
 
-	err = libusb_bulk_transfer(ctx->usb_handle, ep, (uint8_t *) &command,
-		length + MORPHEUS_COMMAND_HEADER_SIZE, &xferred, 0);
+	err = libusb_bulk_transfer(
+		ctx->usb_handle,
+		ep,
+		(uint8_t *)&command,
+		length + MORPHEUS_COMMAND_HEADER_SIZE,
+		&xferred,
+		0
+	);
 
 	return err;
 }
 
-int psvr_read_sensor_sync(psvr_context *ctx, uint8_t *payload, uint32_t length)
-{
+int psvr_read_sync(enum morpheus_usb_interfaces interface, psvr_context *ctx, uint8_t *payload, uint32_t length) {
+	if (!(ctx->claimed_interfaces & (1 << interface))) return; //only execute if we have claimed the interface
+
 	int ep;
 	int xferred = 0;
 	int err;
 
-	ep = ctx->usb_descriptor->interface[PSVR_INTERFACE_HID_SENSOR]
+	ep = ctx->usb_descriptor->interface[interface]
 		.altsetting[0]
 		.endpoint[0]
 		.bEndpointAddress;
 	ep |= ENDPOINT_IN;
 
-	err = libusb_interrupt_transfer(ctx->usb_handle, ep, payload,
-		length, &xferred, 0);
+	err = libusb_interrupt_transfer(
+		ctx->usb_handle,
+		ep,
+		payload,
+		length,
+		&xferred,
+		0
+	);
 
 
 	if (err != LIBUSB_SUCCESS) {
@@ -158,6 +251,18 @@ int psvr_read_sensor_sync(psvr_context *ctx, uint8_t *payload, uint32_t length)
 	}
 
 	return xferred;
+}
+
+int psvr_send_command_sync(psvr_context *ctx, enum psvr_report_id id, uint8_t *payload, uint32_t length) {
+	return psvr_send_sync(PSVR_INTERFACE_HID_CONTROL, ctx, id, payload, length);
+}
+
+int psvr_read_sensor_sync(psvr_context *ctx, uint8_t *payload, uint32_t length) {
+	return psvr_read_sync(PSVR_INTERFACE_HID_SENSOR, ctx, payload, length);
+}
+
+int psvr_read_control_sync(psvr_context *ctx, uint8_t *payload, uint32_t length) {
+	return psvr_read_sync(PSVR_INTERFACE_HID_CONTROL, ctx, payload, length);
 }
 
 void psvr_close(psvr_context *ctx)

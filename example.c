@@ -29,31 +29,50 @@
 
 static psvr_context *ctx;
 
-static int command_set_power(uint32_t on)
-{
+static int command_set_power(uint32_t on) {
 	printf("Set Power %d\n", on);
-	return psvr_send_command_sync(ctx, 0x17, (uint8_t *) &on, 4);
+	return psvr_send_command_sync(ctx, eRID_HeadsetPower, (uint8_t *)&on, 4);
 }
 
-static int command_enable_vr_mode()
-{
+static int command_enable_vr_mode() {
 	uint32_t payload[2];
 	payload[0] = 0xFFFFFF00;
 	payload[1] = 0x00000000;
 	printf("Enable VR Mode\n");
-	return psvr_send_command_sync(ctx, 0x11, (uint8_t *) &payload, 8);
+	return psvr_send_command_sync(ctx, eRID_VRTracking, (uint8_t *)&payload, 8);
 }
 
-static void print_sensor_data(struct psvr_sensor_frame *frame)
-{
+static int command_get_device_info() {
+	printf("Getting Device Info.\n");
+
+	uint8_t cmd[] = { 0x80, 0, 0, 0, 0, 0, 0, 0 };
+	int r = psvr_send_command_sync(ctx, eRID_DeviceInfo, cmd, 8);
+	printf("CMD Result: %i\n", r);
+
+	union psvr_device_info sinfo;
+	int sr = psvr_read_sensor_sync(ctx, (uint8_t *)&sinfo, sizeof(union psvr_device_info));
+	printf("Sensor Result: %i\n", sr);
+	printf("Version: %i.%i\n", sinfo.version.major, sinfo.version.minor);
+	printf("Serial: %s\n", sinfo.serialNumber);
+
+	printf("Raw Data:\n");
+	for (int i = 0; i < 48; i++) {
+		printf("%i ", sinfo.raw[i]);
+	}
+	printf("\n");
+
+	return r;
+}
+
+static void print_sensor_data(struct psvr_sensor_frame *frame) {
 	int i;
 	printf("Button: Plus=%d, Minus=%d, Mute=%d\n", frame->button.plus, frame->button.minus, frame->button.mute);
 	printf("Volume: %d\n", frame->volume);
 	printf("Status: %x\n", frame->status.as_byte);
 	for (i = 0; i < 2; i++) {
 		printf("Frame#%d: gyro=%8d, %8d, %8d accel=%8d, %8d, %8d\n", i,
-			frame->data[i].gyro.yaw, frame->data[i].gyro.pitch, frame->data[i].gyro.roll,
-			frame->data[i].accel.x, frame->data[i].accel.y, frame->data[i].accel.z);
+			   frame->data[i].gyro.yaw, frame->data[i].gyro.pitch, frame->data[i].gyro.roll,
+			   frame->data[i].accel.x, frame->data[i].accel.y, frame->data[i].accel.z);
 	}
 }
 
@@ -70,10 +89,8 @@ void usleep(DWORD waitTime) {
 }
 #endif
 
-int main(void)
-{
-	int r, i;
-	struct psvr_sensor_frame frame;
+int main(void) {
+	int r;
 
 	if ((r = psvr_open(&ctx)) < 0) {
 		printf("Cannot open PSVR\n");
@@ -81,10 +98,13 @@ int main(void)
 	}
 
 	command_set_power(1);
+	command_get_device_info();
+
 	command_enable_vr_mode();
 
-	for (i = 0; i < 1000; i++) {
-		r = psvr_read_sensor_sync(ctx, (uint8_t *) &frame, sizeof (struct psvr_sensor_frame));
+	struct psvr_sensor_frame frame;
+	for (int i = 0; i < 100; i++) {
+		r = psvr_read_sensor_sync(ctx, (uint8_t *)&frame, sizeof(struct psvr_sensor_frame));
 		print_sensor_data(&frame);
 		usleep(10 * 1000);
 	}

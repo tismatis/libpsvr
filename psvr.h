@@ -15,50 +15,51 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "ReportID.h"
+#include "Sensor_Frame.h"
+#include "Device_Info.h"
+#include "Device_Status.h"
+#include "Unsolicited_Report.h"
+
 typedef struct psvr_context psvr_context;
 
-#pragma pack(1)
-struct psvr_sensor_frame {
-	struct {
-	 	uint8_t reserved:1;
-	 	uint8_t plus:1;
-	 	uint8_t minus:1;
-	 	uint8_t mute:1;
-	} button;
-	uint8_t reserved0;
-	uint8_t volume;
-	uint8_t reserved1[5];
-	union {
-		uint8_t as_byte;
-		struct {
-			uint8_t worn:1;
-			uint8_t display_active:1;
-			uint8_t hdmi_disconnected:1;	// XXX
-			uint8_t microphone_muted:1;
-			uint8_t headphone_connected:1;
-			uint8_t reserved:2;
-			uint8_t tick:1;
-		};
-	} status;
-	uint8_t reserved2[11];
-	struct {
-		struct {
-			int16_t yaw;
-			int16_t pitch;
-			int16_t roll;
-		} gyro;
-		struct  {
-			int16_t x;
-			int16_t y;
-			int16_t z;
-		} accel;
-		uint8_t reserved[4];
-	} data[2];
-	uint8_t reserved3[12];
-};
-#pragma pack()
-
 int psvr_open(psvr_context **ctx);
+
+int psvr_open_ex(
+	psvr_context **ctx,
+	int interfaces_to_claim
+);
+
 void psvr_close(psvr_context *ctx);
-int psvr_send_command_sync(psvr_context *ctx, uint8_t id, uint8_t *payload, uint32_t length);
-int psvr_read_sensor_sync(psvr_context *ctx, uint8_t *payload, uint32_t length);
+
+int psvr_send_sync(
+	enum morpheus_usb_interfaces interface,
+	psvr_context *ctx,
+	enum psvr_report_id id,
+	uint8_t *payload,
+	uint32_t length
+);
+int psvr_read_sync(
+	enum morpheus_usb_interfaces interface,
+	psvr_context *ctx,
+	uint8_t *payload,
+	uint32_t length
+);
+
+int psvr_send_command_sync(
+	psvr_context *ctx,
+	enum psvr_report_id id,
+	uint8_t *payload,
+	uint32_t length
+);
+
+int psvr_read_sensor_sync(
+	psvr_context *ctx,
+	uint8_t *payload,
+	uint32_t length
+);
+int psvr_read_control_sync(
+	psvr_context *ctx,
+	uint8_t *payload,
+	uint32_t length
+);
