@@ -165,6 +165,7 @@
   <ItemGroup>
     <ClInclude Include="..\Device_Info.h" />
     <ClInclude Include="..\Device_Status.h" />
+    <ClInclude Include="..\Control_Frame.h" />
     <ClInclude Include="..\Unsolicited_Report.h" />
     <ClInclude Include="..\morpheus.h" />
     <ClInclude Include="..\psvr.h" />

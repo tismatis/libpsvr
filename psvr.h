@@ -16,6 +16,7 @@
  */
 
 #include "ReportID.h"
+#include "Control_Frame.h"
 #include "Sensor_Frame.h"
 #include "Device_Info.h"
 #include "Device_Status.h"
@@ -23,15 +24,21 @@
 
 typedef struct psvr_context psvr_context;
 
+//Open a connection to the PSVR
+//Sensor and Control interfaces are opened.
 int psvr_open(psvr_context **ctx);
 
+//Open a connection to the PSVR
+//Can specify which interfaces to open based on mask.
 int psvr_open_ex(
 	psvr_context **ctx,
 	int interfaces_to_claim
 );
 
+//Close a connection to the PSVR
 void psvr_close(psvr_context *ctx);
 
+//Send a command to a specific interface
 int psvr_send_sync(
 	enum morpheus_usb_interfaces interface,
 	psvr_context *ctx,
@@ -39,6 +46,15 @@ int psvr_send_sync(
 	uint8_t *payload,
 	uint32_t length
 );
+
+//Send a raw command to a specific interface
+int psvr_send_raw_sync(
+	enum morpheus_usb_interfaces interface,
+	psvr_context *ctx,
+	struct morpheus_control_command *command
+);
+
+//Read data from a specific interface
 int psvr_read_sync(
 	enum morpheus_usb_interfaces interface,
 	psvr_context *ctx,
@@ -46,6 +62,7 @@ int psvr_read_sync(
 	uint32_t length
 );
 
+//Send a command to the Control interface
 int psvr_send_command_sync(
 	psvr_context *ctx,
 	enum psvr_report_id id,
@@ -53,11 +70,15 @@ int psvr_send_command_sync(
 	uint32_t length
 );
 
+//Read data from the Sensor interface
 int psvr_read_sensor_sync(
 	psvr_context *ctx,
 	uint8_t *payload,
 	uint32_t length
 );
+
+//Read data from the Control interface
+//NOTE! This is blocking.
 int psvr_read_control_sync(
 	psvr_context *ctx,
 	uint8_t *payload,

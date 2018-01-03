@@ -26,12 +26,13 @@
 #endif
 
 #include "psvr.h"
+#include "morpheus.h"
 
 static psvr_context *ctx;
 
 static int command_set_power(uint32_t on) {
 	printf("Set Power %d\n", on);
-	return psvr_send_command_sync(ctx, eRID_HeadsetPower, (uint8_t *)&on, 4);
+	return psvr_send_command_sync(ctx, eRID_HeadsetPower, (uint8_t*)&on, 4);
 }
 
 static int command_enable_vr_mode() {
@@ -50,7 +51,7 @@ static int command_get_device_info() {
 	printf("CMD Result: %i\n", r);
 
 	union psvr_device_info sinfo;
-	int sr = psvr_read_sensor_sync(ctx, (uint8_t *)&sinfo, sizeof(union psvr_device_info));
+	int sr = psvr_read_control_sync(ctx, (uint8_t *)&sinfo, sizeof(union psvr_device_info));
 	printf("Sensor Result: %i\n", sr);
 	printf("Version: %i.%i\n", sinfo.version.major, sinfo.version.minor);
 	printf("Serial: %s\n", sinfo.serialNumber);
@@ -64,7 +65,72 @@ static int command_get_device_info() {
 	return r;
 }
 
-static void print_sensor_data(struct psvr_sensor_frame *frame) {
+static void print_control_data(union psvr_control_frame *frame) {
+	switch (frame->id) {
+	case eRT_Info:
+	{
+		frame->dinfo.version.major += 0x30;
+		frame->dinfo.version.minor += 0x30;
+
+		printf("Info:\n");
+		printf("- major: %i\n", frame->dinfo.version.major);
+		printf("- minor: %i\n", frame->dinfo.version.minor);
+		printf("- serial: %s\n", frame->dinfo.serialNumber);
+		printf("- serial raw: ");
+		for (int i = 0; i < 16; i++) printf("%i ", frame->dinfo.serialNumber[i]);
+		printf("\n");
+
+		//debugging based on raw data.
+		unsigned int major = frame->data[7] + 0x30;
+		unsigned int minor = frame->data[8] + 0x30;
+
+		uint8_t serial[16];
+		for (int i = 0, i2 = 12; i < 16; i++, i2++) serial[i] = frame->data[i2];
+
+		printf("Info2:\n");
+		printf("- major: %i\n", major);
+		printf("- minor: %i\n", minor);
+		printf("- serial: %s\n", serial);
+		printf("- serial raw: ");
+		for (int i = 0; i < 16; i++) printf("%i ", serial[i]);
+		printf("\n");
+	}
+		break;
+	case eRT_Status:
+	{
+		printf("Status:\n");
+		printf("- Mask: %i\n", frame->dstatus.mask);
+		printf("-- HeadsetOn: %s\n", frame->dstatus.headsetOn ? "true" : "false");
+		printf("-- Worn: %s\n", frame->dstatus.worn ? "true" : "false");
+		printf("-- Cinematic: %s\n", frame->dstatus.cinematic ? "true" : "false");
+		printf("-- reserved0: %s\n", frame->dstatus.maskreserved0 ? "true" : "false");
+		printf("-- Headphones: %s\n", frame->dstatus.headphones ? "true" : "false");
+		printf("-- Mute: %s\n", frame->dstatus.mute ? "true" : "false");
+		printf("-- CEC: %s\n", frame->dstatus.cec ? "true" : "false");
+		printf("-- reserved1: %s\n", frame->dstatus.maskreserved1 ? "true" : "false");
+		printf("- Volume: %i\n", frame->dstatus.volume);
+		printf("- reserved0: %i\n", frame->dstatus.reserved0);
+		printf("- bridgeOutputID: %i\n", frame->dstatus.bridgeOutputID);
+		printf("- raw: ");
+		for (int i = 0; i < 8; i++) printf("%i ", frame->dstatus.raw[i]);
+		printf("\n");
+	}
+		break;
+	case eRT_Unsolicited:
+	{
+		printf("Report:\n");
+		printf("- id: %i\n", frame->ureport.id);
+		printf("- code: %i\n", frame->ureport.code);
+		printf("- message: %s\n", frame->ureport.message);
+		printf("- message raw: ");
+		for (int i = 0; i < 58; i++) printf("%i ", frame->ureport.message[i]);
+		printf("\n");
+	}
+		break;
+	}
+}
+
+static void print_sensor_data(union psvr_sensor_frame *frame) {
 	int i;
 	printf("Button: Plus=%d, Minus=%d, Mute=%d\n", frame->button.plus, frame->button.minus, frame->button.mute);
 	printf("Volume: %d\n", frame->volume);
@@ -87,6 +153,11 @@ void usleep(DWORD waitTime) {
 		QueryPerformanceCounter((LARGE_INTEGER*)&now);
 	} while ((now.QuadPart - start.QuadPart) / (float)(perfCnt.QuadPart) * 1000 * 1000 < waitTime);
 }
+
+void pause() {
+	//_getch();
+	system("pause");
+}
 #endif
 
 int main(void) {
@@ -98,13 +169,26 @@ int main(void) {
 	}
 
 	command_set_power(1);
-	command_get_device_info();
+
+	//\x80\x00\x00\x00\x00\x00\x00\x00
+	//uint8_t cmd[] = { 0x80, 0, 0, 0, 0, 0, 0, 0 };
+
+	//0-4 calibration data
+	//uint8_t cmd[] = { 0x86, 0, 0, 0, 0, 0, 0, 0 };
+	//r = psvr_send_command_sync(ctx, eRID_DeviceInfo, cmd, 8);
+
+	/*union psvr_control_frame psvrFrame;
+	for (int i = 0; i < 10; i++) {
+		r = psvr_read_control_sync(ctx, (uint8_t *)&psvrFrame, sizeof(union psvr_control_frame)); //BLOCKING!!!
+		print_control_data(&psvrFrame);
+		usleep(10 * 1000);
+	}*/
 
 	command_enable_vr_mode();
 
-	struct psvr_sensor_frame frame;
-	for (int i = 0; i < 100; i++) {
-		r = psvr_read_sensor_sync(ctx, (uint8_t *)&frame, sizeof(struct psvr_sensor_frame));
+	union psvr_sensor_frame frame;
+	for (int i = 0; i < 1000; i++) {
+		r = psvr_read_sensor_sync(ctx, (uint8_t *)&frame, sizeof(union psvr_sensor_frame));
 		print_sensor_data(&frame);
 		usleep(10 * 1000);
 	}
@@ -112,6 +196,8 @@ int main(void) {
 	command_set_power(0);
 
 	psvr_close(ctx);
+
+	pause();
 
 	return 0;
 }

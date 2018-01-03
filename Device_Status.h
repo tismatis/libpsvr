@@ -16,9 +16,21 @@ enum psvr_device_status_mask {
 #pragma pack(1)
 union psvr_device_status {
 	struct psvr_device_status_struct {
-		uint8_t mask;
+		union {
+			uint8_t mask;
+			struct {
+				uint8_t headsetOn : 1;
+				uint8_t worn : 1;
+				uint8_t cinematic : 1;
+				uint8_t maskreserved0 : 1;
+				uint8_t headphones : 1;
+				uint8_t mute : 1;
+				uint8_t cec : 1;
+				uint8_t maskreserved1 : 1;
+			};
+		};
 		uint32_t volume;
-		unsigned short int reserved0;
+		uint16_t reserved0;
 		union {
 			uint8_t bridgeOutputID;
 			uint8_t reserved1;
