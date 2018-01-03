@@ -20,9 +20,14 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="Sensors1_tab">
+      <widget class="QWidget" name="Controller_tab">
        <attribute name="title">
-        <string>Sensors Type 1</string>
+        <string>Controller</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="Sensors_tab">
+       <attribute name="title">
+        <string>Sensors</string>
        </attribute>
        <layout class="QFormLayout" name="formLayout">
         <item row="0" column="0">
@@ -551,11 +556,6 @@
          </widget>
         </item>
        </layout>
-      </widget>
-      <widget class="QWidget" name="Controller_tab">
-       <attribute name="title">
-        <string>Controller</string>
-       </attribute>
       </widget>
      </widget>
     </item>

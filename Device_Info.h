@@ -3,7 +3,7 @@
 #include "PSVR_Common.h"
 
 #pragma pack(1)
-union psvr_device_info {
+union psvr_device_info_union {
 	struct psvr_device_info_struct {
 		uint16_t reserved0; //0,1
 		union {
@@ -21,12 +21,17 @@ union psvr_device_info {
 			int8_t serialNumber[16]; //12 - 27
 		};
 		uint32_t reserved4[5]; //28 - 48
+
+	#ifdef __cplusplus  
+	} s;
+	#else
 	};
+	#endif
 	uint8_t raw[48];
 };
 
 //alternative?
-union psvr_device_info2 {
+union psvr_device_info2_union {
 	struct psvr_device_info2_struct {
 		uint16_t reserved0[3]; //0-6
 		struct {
@@ -39,7 +44,15 @@ union psvr_device_info2 {
 			wchar_t wSerialNumber[8];
 		};
 		uint8_t reserved2[21];
+
+	#ifdef __cplusplus  
+	} s;
+	#else
 	};
+	#endif
 	uint8_t raw[48];
 };
 #pragma pack()
+
+typedef union psvr_device_info_union psvr_device_info;
+typedef union psvr_device_info2_union psvr_device_info2;

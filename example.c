@@ -50,8 +50,8 @@ static int command_get_device_info() {
 	int r = psvr_send_command_sync(ctx, eRID_DeviceInfo, cmd, 8);
 	printf("CMD Result: %i\n", r);
 
-	union psvr_device_info sinfo;
-	int sr = psvr_read_control_sync(ctx, (uint8_t *)&sinfo, sizeof(union psvr_device_info));
+	psvr_device_info sinfo;
+	int sr = psvr_read_control_sync(ctx, (uint8_t *)&sinfo, sizeof(psvr_device_info));
 	printf("Sensor Result: %i\n", sr);
 	printf("Version: %i.%i\n", sinfo.version.major, sinfo.version.minor);
 	printf("Serial: %s\n", sinfo.serialNumber);
@@ -65,7 +65,7 @@ static int command_get_device_info() {
 	return r;
 }
 
-static void print_control_data(union psvr_control_frame *frame) {
+static void print_control_data(psvr_control_frame *frame) {
 	switch (frame->id) {
 	case eRT_Info:
 	{
@@ -130,7 +130,7 @@ static void print_control_data(union psvr_control_frame *frame) {
 	}
 }
 
-static void print_sensor_data(union psvr_sensor_frame *frame) {
+static void print_sensor_data(psvr_sensor_frame *frame) {
 	int i;
 	printf("Button: Plus=%d, Minus=%d, Mute=%d\n", frame->button.plus, frame->button.minus, frame->button.mute);
 	printf("Volume: %d\n", frame->volume);
@@ -186,9 +186,9 @@ int main(void) {
 
 	command_enable_vr_mode();
 
-	union psvr_sensor_frame frame;
+	psvr_sensor_frame frame;
 	for (int i = 0; i < 1000; i++) {
-		r = psvr_read_sensor_sync(ctx, (uint8_t *)&frame, sizeof(union psvr_sensor_frame));
+		r = psvr_read_sensor_sync(ctx, (uint8_t *)&frame, sizeof(psvr_sensor_frame));
 		print_sensor_data(&frame);
 		usleep(10 * 1000);
 	}

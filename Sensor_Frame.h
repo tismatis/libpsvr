@@ -3,7 +3,7 @@
 #include "PSVR_Common.h"
 
 #pragma pack(1)
-union psvr_sensor_frame {
+union psvr_sensor_frame_union {
 	struct psvr_sensor_frame_struct {
 		struct {
 			uint8_t reserved : 1;
@@ -52,7 +52,14 @@ union psvr_sensor_frame {
 		uint8_t reserved4[5]; //5
 		uint8_t frame; //1
 		uint8_t reserved5; //1*/
+
+	#ifdef __cplusplus  
+	} s;
+	#else
 	};
+	#endif
 	uint8_t raw[64];
 };
 #pragma pack()
+
+typedef union psvr_sensor_frame_union psvr_sensor_frame;

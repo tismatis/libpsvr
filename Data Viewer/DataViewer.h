@@ -51,6 +51,6 @@ private:
 
 	Ui_DataViewerClass ui;
 
-	SensorThread* sensorThread;
+	SensorThread *sensorThread;
 };
 //---------------------------------------------

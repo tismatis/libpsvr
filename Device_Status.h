@@ -14,7 +14,7 @@ enum psvr_device_status_mask {
 };
 
 #pragma pack(1)
-union psvr_device_status {
+union psvr_device_status_union {
 	struct psvr_device_status_struct {
 		union {
 			uint8_t mask;
@@ -35,7 +35,14 @@ union psvr_device_status {
 			uint8_t bridgeOutputID;
 			uint8_t reserved1;
 		};
+
+	#ifdef __cplusplus  
+	} s;
+	#else
 	};
+	#endif
 	uint8_t raw[8];
 };
 #pragma pack()
+
+typedef union psvr_device_status_union psvr_device_status;
