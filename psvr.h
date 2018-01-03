@@ -15,6 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef __cplusplus  
+extern "C" {
+#endif
+
 #include "ReportID.h"
 #include "Control_Frame.h"
 #include "Sensor_Frame.h"
@@ -22,24 +26,26 @@
 #include "Device_Status.h"
 #include "Unsolicited_Report.h"
 
+#include "PSVR_Lib.h"
+
 typedef struct psvr_context psvr_context;
 
 //Open a connection to the PSVR
 //Sensor and Control interfaces are opened.
-int psvr_open(psvr_context **ctx);
+PSVR_LIB int psvr_open(psvr_context **ctx);
 
 //Open a connection to the PSVR
 //Can specify which interfaces to open based on mask.
-int psvr_open_ex(
+PSVR_LIB int psvr_open_ex(
 	psvr_context **ctx,
 	int interfaces_to_claim
 );
 
 //Close a connection to the PSVR
-void psvr_close(psvr_context *ctx);
+PSVR_LIB void psvr_close(psvr_context *ctx);
 
 //Send a command to a specific interface
-int psvr_send_sync(
+PSVR_LIB int psvr_send_sync(
 	enum morpheus_usb_interfaces interface,
 	psvr_context *ctx,
 	enum psvr_report_id id,
@@ -48,14 +54,14 @@ int psvr_send_sync(
 );
 
 //Send a raw command to a specific interface
-int psvr_send_raw_sync(
+PSVR_LIB int psvr_send_raw_sync(
 	enum morpheus_usb_interfaces interface,
 	psvr_context *ctx,
 	struct morpheus_control_command *command
 );
 
 //Read data from a specific interface
-int psvr_read_sync(
+PSVR_LIB int psvr_read_sync(
 	enum morpheus_usb_interfaces interface,
 	psvr_context *ctx,
 	uint8_t *payload,
@@ -63,7 +69,7 @@ int psvr_read_sync(
 );
 
 //Send a command to the Control interface
-int psvr_send_command_sync(
+PSVR_LIB int psvr_send_command_sync(
 	psvr_context *ctx,
 	enum psvr_report_id id,
 	uint8_t *payload,
@@ -71,7 +77,7 @@ int psvr_send_command_sync(
 );
 
 //Read data from the Sensor interface
-int psvr_read_sensor_sync(
+PSVR_LIB int psvr_read_sensor_sync(
 	psvr_context *ctx,
 	uint8_t *payload,
 	uint32_t length
@@ -79,8 +85,12 @@ int psvr_read_sensor_sync(
 
 //Read data from the Control interface
 //NOTE! This is blocking.
-int psvr_read_control_sync(
+PSVR_LIB int psvr_read_control_sync(
 	psvr_context *ctx,
 	uint8_t *payload,
 	uint32_t length
 );
+
+#ifdef __cplusplus  
+}
+#endif  
