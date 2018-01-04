@@ -30,6 +30,13 @@ extern "C" {
 
 typedef struct psvr_context psvr_context;
 
+//Logger function prototype.
+typedef void(*psvr_log)(const char* msg, va_list args);
+
+//Set the psvr logger.
+//Defaults to printf if there is no logger.
+PSVR_LIB void psvr_set_log(psvr_log* logger);
+
 //Open a connection to the PSVR
 //Sensor and Control interfaces are opened.
 PSVR_LIB int psvr_open(psvr_context **ctx);

@@ -87,5 +87,10 @@ private:
 
 	SensorThread *sensorThread;
 	ControlThread *controlThread;
+
+private:
+	static void psvr_logger(const char* msg, va_list args);
+
+	static QTextEdit* loggingArea;
 };
 //---------------------------------------------

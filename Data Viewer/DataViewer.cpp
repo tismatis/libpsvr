@@ -81,7 +81,12 @@ DataViewer::DataViewer(QWidget *parent)
 
 	ui.cmbx_update_spd->setCurrentIndex(2);
 
-	psvr_context *ctx;
+	DataViewer::loggingArea = ui.txt_control_log;
+
+	psvr_log logger = DataViewer::psvr_logger;
+	psvr_set_log(&logger);
+
+	psvr_context *ctx = nullptr;
 
 	int err = psvr_open(&ctx); //open psvr context
 
@@ -486,5 +491,18 @@ void DataViewer::sendManualCommand() {
 	qDebug() << array1.toHex();     // to have a printable form use "toHex()"!
 	qDebug() << array2.toHex();
 	*/
+}
+//---------------------------------------------
+
+//---------------------------------------------
+//Logging stuff
+//---------------------------------------------
+QTextEdit* DataViewer::loggingArea = nullptr;
+
+void DataViewer::psvr_logger(const char * msg, va_list args) {
+	char buff[256];
+	vsnprintf(buff, 256, msg, args);
+
+	DataViewer::loggingArea->append(buff);
 }
 //---------------------------------------------

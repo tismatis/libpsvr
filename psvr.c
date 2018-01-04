@@ -32,6 +32,24 @@ struct psvr_context {
 	(1 << PSVR_INTERFACE_HID_CONTROL)\
 )
 
+static psvr_log* psvr_logger = NULL;
+
+void psvr_set_log(psvr_log* logger) { psvr_logger = logger; }
+
+void psvr_printf(const char* msg, ...) {
+	va_list valist;
+	va_start(valist, msg);
+
+	if (psvr_logger)
+		(*psvr_logger)(msg, valist);
+	else {
+		vprintf(msg, valist);
+		printf("\n");
+	}
+
+	va_end(valist);
+}
+
 int psvr_open(psvr_context **ctx) {
 	int i;
 	int err;
@@ -43,7 +61,7 @@ int psvr_open(psvr_context **ctx) {
 	memset(_ctx, 0, sizeof(psvr_context));
 
 	if ((err = libusb_init(&_ctx->usb)) != LIBUSB_SUCCESS) {
-		printf("Initialization Failed\n");
+		psvr_printf("Initialization Failed");
 		goto error;
 	}
 
@@ -56,7 +74,7 @@ int psvr_open(psvr_context **ctx) {
 	);
 
 	if (_ctx->usb_handle == NULL) {
-		printf("Morpheous device not found\n");
+		psvr_printf("Morpheous device not found");
 		goto error;
 	}
 
@@ -72,7 +90,7 @@ int psvr_open(psvr_context **ctx) {
 		)
 		!= LIBUSB_SUCCESS
 	) {
-		printf("Get config descriptor failed\n");
+		psvr_printf("Get config descriptor failed");
 		goto error;
 	}
 
@@ -82,21 +100,21 @@ int psvr_open(psvr_context **ctx) {
 		#ifndef PSVRWIN
 			err = libusb_kernel_driver_active(_ctx->usb_handle, i);
 			if (err < 0) {
-				printf("Interface #%d driver status failed - %i\n", i, err);
+				psvr_printf("Interface #%d driver status failed - %i", i, err);
 				goto error;
 			}
 			if (err == 1) {
-				printf("Detach kernel driver on interface #%d\n", i);
+				psvr_printf("Detach kernel driver on interface #%d", i);
 				err = libusb_detach_kernel_driver(_ctx->usb_handle, i);
 				if (err != LIBUSB_SUCCESS) {
-					printf("Interface #%d detach failed\n", i);
+					psvr_printf("Interface #%d detach failed", i);
 					goto error;
 				}
 			}
 		#endif
 			err = libusb_claim_interface(_ctx->usb_handle, i);
 			if (err != LIBUSB_SUCCESS) {
-				printf("Interface #%d claim failed\n", i);
+				psvr_printf("Interface #%d claim failed", i);
 				goto error;
 			}
 			_ctx->claimed_interfaces |= mask;
@@ -123,7 +141,7 @@ int psvr_open_ex(psvr_context **ctx, int interfaces_to_claim) {
 	memset(_ctx, 0, sizeof(psvr_context));
 
 	if ((err = libusb_init(&_ctx->usb)) != LIBUSB_SUCCESS) {
-		printf("Initialization Failed\n");
+		psvr_printf("Initialization Failed");
 		goto error;
 	}
 
@@ -136,7 +154,7 @@ int psvr_open_ex(psvr_context **ctx, int interfaces_to_claim) {
 	);
 
 	if (_ctx->usb_handle == NULL) {
-		printf("Morpheous device not found\n");
+		psvr_printf("Morpheous device not found");
 		goto error;
 	}
 
@@ -152,7 +170,7 @@ int psvr_open_ex(psvr_context **ctx, int interfaces_to_claim) {
 		)
 		!= LIBUSB_SUCCESS
 	) {
-		printf("Get config descriptor failed\n");
+		psvr_printf("Get config descriptor failed");
 		goto error;
 	}
 
@@ -162,21 +180,21 @@ int psvr_open_ex(psvr_context **ctx, int interfaces_to_claim) {
 		#ifndef PSVRWIN
 			err = libusb_kernel_driver_active(_ctx->usb_handle, i);
 			if (err < 0) {
-				printf("Interface #%d driver status failed - %i\n", i, err);
+				psvr_printf("Interface #%d driver status failed - %i", i, err);
 				goto error;
 			}
 			if (err == 1) {
-				printf("Detach kernel driver on interface #%d\n", i);
+				psvr_printf("Detach kernel driver on interface #%d", i);
 				err = libusb_detach_kernel_driver(_ctx->usb_handle, i);
 				if (err != LIBUSB_SUCCESS) {
-					printf("Interface #%d detach failed\n", i);
+					printf("Interface #%d detach failed", i);
 					goto error;
 				}
 			}
 		#endif
 			err = libusb_claim_interface(_ctx->usb_handle, i);
 			if (err != LIBUSB_SUCCESS) {
-				printf("Interface #%d claim failed\n", i);
+				psvr_printf("Interface #%d claim failed", i);
 				goto error;
 			}
 			_ctx->claimed_interfaces |= mask;
@@ -273,28 +291,30 @@ int psvr_read_control_sync(psvr_context *ctx, uint8_t *payload, uint32_t length)
 
 void psvr_close(psvr_context *ctx)
 {
+	if (!ctx) return;
+
 	int i = 0;
 
 	while (ctx->claimed_interfaces) {
 		int mask = 1 << i;
 		if (ctx->claimed_interfaces & mask) {
 			libusb_release_interface(ctx->usb_handle, i);
-			printf("Interface #%d released\n", i);
+			psvr_printf("Interface #%d released", i);
 			ctx->claimed_interfaces &= ~mask;
 		}
 		i++;
 	}
 	if (ctx->usb_descriptor != NULL) {
 		libusb_free_config_descriptor(ctx->usb_descriptor);
-		printf("Descriptor is freed\n");
+		psvr_printf("Descriptor is freed");
 	}
 	if (ctx->usb_handle != NULL) {
 		libusb_close(ctx->usb_handle);
-		printf("Device is freed\n");
+		psvr_printf("Device is freed");
 	}
 	if (ctx->usb != NULL) {
 		libusb_exit(ctx->usb);
-		printf("LibUsb is freed\n");
+		psvr_printf("LibUsb is freed");
 	}
 	free(ctx);
 }
