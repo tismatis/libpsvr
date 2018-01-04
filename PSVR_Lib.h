@@ -3,14 +3,25 @@
 #if (defined(_WIN32) || defined(_WIN64))
 	#define PSVRWIN
 
-	/*#ifdef PSVR_EXPORT_LIB
-		#define PSVR_LIB __declspec( dllexport )
-	#else 
-		#define PSVR_LIB __declspec(dllimport)
-	#endif*/
-	#define PSVR_LIB
+	#ifdef PSVR_DLL
+		#ifdef PSVR_EXPORT_DLL
+			#define PSVR_LIB __declspec(dllexport)
+		#else 
+			#define PSVR_LIB __declspec(dllimport)
+		#endif
+	#else
+		#define PSVR_LIB
+	#endif
 #else
 	#define PSVRNIX
-	//#define PSVR_LIB extern
-	#define PSVR_LIB
+
+	#ifdef PSVR_DLL
+		#ifdef PSVR_EXPORT_DLL
+			#define PSVR_LIB extern
+		#else 
+			#define PSVR_LIB
+		#endif
+	#else
+		#define PSVR_LIB
+	#endif
 #endif

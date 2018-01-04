@@ -15,3 +15,6 @@
 /LibPSVR_Example/x64
 /Data Viewer/GeneratedFiles
 /Data Viewer/x64/Debug
+/LibPSVR/Debug DLL
+/LibPSVR/Release DLL
+/Data Viewer/x64/Release

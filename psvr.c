@@ -196,34 +196,16 @@ int psvr_send_sync(enum morpheus_usb_interfaces interface, psvr_context *ctx, ui
 	if (!(ctx->claimed_interfaces & (1 << interface))) return LIBUSB_ERROR_OTHER; //only execute if we have claimed the interface
 
 	struct morpheus_control_command command;
-	int ep;
-	int xferred;
-	int err;
-
 	command.header.id = id;
 	command.header.magic = 0xAA;
 	command.header.length = length;
 	memcpy(command.payload, payload, length);
 
-	ep = ctx->usb_descriptor->interface[interface]
-		.altsetting[0]
-		.endpoint[0]
-		.bEndpointAddress;
-	ep &= ~ENDPOINT_IN;
-
-	err = libusb_bulk_transfer(
-		ctx->usb_handle,
-		ep,
-		(uint8_t *)&command,
-		length + MORPHEUS_COMMAND_HEADER_SIZE,
-		&xferred,
-		0
-	);
-
-	return err;
+	return psvr_send_raw_sync(interface, ctx, &command);
 }
 
 int psvr_send_raw_sync(enum morpheus_usb_interfaces interface, psvr_context *ctx, struct morpheus_control_command *command) {
+	if (!(ctx->claimed_interfaces & (1 << interface))) return LIBUSB_ERROR_OTHER; //only execute if we have claimed the interface
 	int ep;
 	int xferred;
 	int err;
