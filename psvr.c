@@ -187,7 +187,7 @@ int psvr_open_ex(psvr_context **ctx, int interfaces_to_claim) {
 				psvr_printf("Detach kernel driver on interface #%d", i);
 				err = libusb_detach_kernel_driver(_ctx->usb_handle, i);
 				if (err != LIBUSB_SUCCESS) {
-					printf("Interface #%d detach failed", i);
+					psvr_printf("Interface #%d detach failed", i);
 					goto error;
 				}
 			}
@@ -211,7 +211,7 @@ error:
 }
 
 int psvr_send_sync(enum morpheus_usb_interfaces interface, psvr_context *ctx, uint8_t id, uint8_t *payload, uint32_t length) {
-	if (!(ctx->claimed_interfaces & (1 << interface))) return LIBUSB_ERROR_OTHER; //only execute if we have claimed the interface
+	if (!ctx || !(ctx->claimed_interfaces & (1 << interface))) return LIBUSB_ERROR_OTHER; //only execute if we have claimed the interface
 
 	struct morpheus_control_command command;
 	command.header.id = id;
@@ -223,7 +223,7 @@ int psvr_send_sync(enum morpheus_usb_interfaces interface, psvr_context *ctx, ui
 }
 
 int psvr_send_raw_sync(enum morpheus_usb_interfaces interface, psvr_context *ctx, struct morpheus_control_command *command) {
-	if (!(ctx->claimed_interfaces & (1 << interface))) return LIBUSB_ERROR_OTHER; //only execute if we have claimed the interface
+	if (!ctx || !(ctx->claimed_interfaces & (1 << interface))) return LIBUSB_ERROR_OTHER; //only execute if we have claimed the interface
 	int ep;
 	int xferred;
 	int err;
@@ -247,7 +247,7 @@ int psvr_send_raw_sync(enum morpheus_usb_interfaces interface, psvr_context *ctx
 }
 
 int psvr_read_sync(enum morpheus_usb_interfaces interface, psvr_context *ctx, uint8_t *payload, uint32_t length) {
-	if (!(ctx->claimed_interfaces & (1 << interface))) return LIBUSB_ERROR_OTHER; //only execute if we have claimed the interface
+	if (!ctx || !(ctx->claimed_interfaces & (1 << interface))) return LIBUSB_ERROR_OTHER; //only execute if we have claimed the interface
 
 	int ep;
 	int xferred = 0;
@@ -289,8 +289,7 @@ int psvr_read_control_sync(psvr_context *ctx, uint8_t *payload, uint32_t length)
 	return psvr_read_sync(PSVR_INTERFACE_HID_CONTROL, ctx, payload, length);
 }
 
-void psvr_close(psvr_context *ctx)
-{
+void psvr_close(psvr_context *ctx){
 	if (!ctx) return;
 
 	int i = 0;

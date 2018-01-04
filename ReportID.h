@@ -8,7 +8,10 @@
 enum psvr_report_id {
 	//length: 8 - 2 payloads
 	//enable - payload0: 0xFFFFFF00, payload1: bool
+	//enable2??? - payload0: 0x80FFFF00, payload1: bool
+	//enable3??? - payload0: 0x00FFFFFF, payload1: bool
 	//tracking test - payload0: (uint8_t[]){ value, 0x00, 0xFF, 0x00, 0xFF, 0xFF, 0xFF, 0xFF }, payload1: 0
+	//with tracking
 	eRID_VRTracking = 0x11,
 
 	//length: 4 - 1 payload
@@ -47,6 +50,7 @@ enum psvr_report_id {
 
 	//length: 4 - 1 payload
 	//(uint8_t[]){ 0x00, 0x00, 0x00, 0x00 }
+	//accepts anything?
 	eRID_Recenter = 0x1b,
 
 	//length: 16 - 4 payloads
@@ -77,7 +81,10 @@ enum psvr_report_id {
 	
 	//length: 4 - 1 payload
 	//enable - payload: (uint32_t)bool
+	//without tracking
 	eRID_VRMode = 0x23,
+
+	eRID_Unknown = 0x25,
 	
 	//length: 8 - 2 payloads
 	/*

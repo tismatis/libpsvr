@@ -181,6 +181,8 @@ DataViewer::DataViewer(QWidget *parent)
 }
 
 DataViewer::~DataViewer() {
+	psvr_set_log(nullptr);
+
 	if (this->sensorThread) {
 		this->sensorThread->stopThread();
 		this->sensorThread->wait();
@@ -220,7 +222,7 @@ DataViewer::~DataViewer() {
 	psvr_close(this->ctx); //close the context
 }
 
-QString hexToString(uint8_t x, int size = 2) { return QString("0x%1").arg(x, size, 16, QLatin1Char('0')); }
+QString hexToString(uint8_t x, int bytesize = 1) { return QString("0x%1").arg(x, bytesize * 2, 16, QLatin1Char('0')); }
 
 void DataViewer::sensorFrame(void *data) {
 	psvr_sensor_frame* frame = (psvr_sensor_frame*)data;
@@ -308,7 +310,7 @@ void DataViewer::controlFrame(void* data) {
 	{
 		QString reserved0;
 		for (int i = 0; i < 3; i++) {
-			reserved0.append(hexToString(frame->s.dinfo.s2.reserved0[i], 4));
+			reserved0.append(hexToString(frame->s.dinfo.s2.reserved0[i], 2));
 			reserved0.append(" ");
 		}
 		ui.lbl_info_reserved0->setText(reserved0);
@@ -356,7 +358,7 @@ void DataViewer::controlFrame(void* data) {
 		ui.lbl_cStatus_cec->setText(frame->s.dstatus.s.cec ? "True" : "False");
 		ui.lbl_cStatus_mReserved1->setText(frame->s.dstatus.s.maskreserved1 ? "True" : "False");
 		ui.lbl_cStatus_vol->setText(QString::number(frame->s.dstatus.s.volume));
-		ui.lbl_cStatus_reserved0->setText(hexToString(frame->s.dstatus.s.reserved0, 4));
+		ui.lbl_cStatus_reserved0->setText(hexToString(frame->s.dstatus.s.reserved0, 2));
 		ui.lbl_cStatus_bridgeOutputID->setText(hexToString(frame->s.dstatus.s.bridgeOutputID));
 
 		QString raw;
@@ -390,6 +392,9 @@ void DataViewer::controlFrame(void* data) {
 		break;
 	}
 }
+
+//---------------------------------------------
+//Button functions
 //---------------------------------------------
 void DataViewer::headsetOn() {
 	if (!ctx) return; //dont have a context, dont run.

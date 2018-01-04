@@ -165,6 +165,7 @@ int main(void) {
 
 	if ((r = psvr_open(&ctx)) < 0) {
 		printf("Cannot open PSVR\n");
+		pause();
 		return -1;
 	}
 

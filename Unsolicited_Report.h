@@ -5,7 +5,7 @@
 enum psvr_unsolicited_report_code {
 	eURC_Ok,
 	eURC_UnknownReport,
-	eURC_reserved,
+	eURC_reserved, //bad command? bad Gp-ID? (what is Gp-ID?)
 	eURC_BadReportLength
 };
 
