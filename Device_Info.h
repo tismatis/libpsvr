@@ -27,11 +27,8 @@ union psvr_device_info_union {
 	#else
 	};
 	#endif
-	uint8_t raw[48];
-};
 
-//alternative?
-union psvr_device_info2_union {
+	//alternative?
 	struct psvr_device_info2_struct {
 		uint16_t reserved0[3]; //0-6
 		struct {
@@ -43,16 +40,12 @@ union psvr_device_info2_union {
 			uint8_t serialNumber[16]; //12-27
 			wchar_t wSerialNumber[8];
 		};
-		uint8_t reserved2[21];
+		uint8_t reserved2[21]; //28 - 48
 
-	#ifdef __cplusplus  
-	} s;
-	#else
-	};
-	#endif
+	} s2;
+
 	uint8_t raw[48];
 };
 #pragma pack()
 
 typedef union psvr_device_info_union psvr_device_info;
-typedef union psvr_device_info2_union psvr_device_info2;

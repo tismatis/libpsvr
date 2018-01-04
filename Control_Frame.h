@@ -21,7 +21,7 @@ union psvr_control_frame_union {
 		uint8_t length;
 		union {
 			uint8_t data[60];
-			psvr_device_info2 dinfo; //id == eRT_Info
+			psvr_device_info dinfo; //id == eRT_Info
 			psvr_device_status dstatus; //id == eRT_Status
 			psvr_unsolicited_report ureport; //id == eRT_Unsolicited
 		};

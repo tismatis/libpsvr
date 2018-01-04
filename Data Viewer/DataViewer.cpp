@@ -303,38 +303,38 @@ void DataViewer::controlFrame(void* data) {
 	{
 		QString reserved0;
 		for (int i = 0; i < 3; i++) {
-			reserved0.append(hexToString(frame->s.dinfo.s.reserved0[i], 4));
+			reserved0.append(hexToString(frame->s.dinfo.s2.reserved0[i], 4));
 			reserved0.append(" ");
 		}
 		ui.lbl_info_reserved0->setText(reserved0);
 
-		ui.lbl_info_major->setText(QString::number(frame->s.dinfo.s.version.major));
-		ui.lbl_info_minor->setText(QString::number(frame->s.dinfo.s.version.minor));
+		ui.lbl_info_major->setText(QString::number(frame->s.dinfo.s2.version.major));
+		ui.lbl_info_minor->setText(QString::number(frame->s.dinfo.s2.version.minor));
 
 		QString reserved1;
 		for (int i = 0; i < 3; i++) {
-			reserved1.append(hexToString(frame->s.dinfo.s.reserved1[i]));
+			reserved1.append(hexToString(frame->s.dinfo.s2.reserved1[i]));
 			reserved1.append(" ");
 		}
 		ui.lbl_info_reserved1->setText(reserved1);
 
 		QString serial;
 		for (int i = 0; i < 16; i++) {
-			serial.append((const char*)frame->s.dinfo.s.serialNumber[i]);
+			serial.append((const char*)frame->s.dinfo.s2.serialNumber[i]);
 			serial.append(" ");
 		}
 		ui.lbl_info_serial->setText(serial);
 
 		QString reserved2;
 		for (int i = 0; i < 21; i++) {
-			reserved2.append(hexToString(frame->s.dinfo.s.reserved2[i]));
+			reserved2.append(hexToString(frame->s.dinfo.s2.reserved2[i]));
 			reserved2.append(" ");
 		}
 		ui.lbl_info_reserved2->setText(reserved2);
 
 		QString raw;
 		for (int i = 0; i < 48; i++) {
-			raw.append(hexToString(frame->s.ureport.raw[i]));
+			raw.append(hexToString(frame->s.dinfo.raw[i]));
 			raw.append(" ");
 		}
 		ui.lbl_info_raw->setText(raw);
