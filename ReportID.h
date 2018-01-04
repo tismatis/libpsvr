@@ -5,7 +5,7 @@
 //1 payload is equal to a length of 4 bytes;
 //1 payload is equal to 1 uint32_t or 4 uint8_t;
 
-enum psvr_report_id_enum {
+enum psvr_report_id {
 	//length: 8 - 2 payloads
 	//enable - payload0: 0xFFFFFF00, payload1: bool
 	//tracking test - payload0: (uint8_t[]){ value, 0x00, 0xFF, 0x00, 0xFF, 0xFF, 0xFF, 0xFF }, payload1: 0

@@ -192,7 +192,7 @@ error:
 	return -1;
 }
 
-int psvr_send_sync(enum morpheus_usb_interfaces interface, psvr_context *ctx, enum psvr_report_id id, uint8_t *payload, uint32_t length) {
+int psvr_send_sync(enum morpheus_usb_interfaces interface, psvr_context *ctx, uint8_t id, uint8_t *payload, uint32_t length) {
 	if (!(ctx->claimed_interfaces & (1 << interface))) return LIBUSB_ERROR_OTHER; //only execute if we have claimed the interface
 
 	struct morpheus_control_command command;
@@ -277,7 +277,7 @@ int psvr_read_sync(enum morpheus_usb_interfaces interface, psvr_context *ctx, ui
 	return xferred;
 }
 
-int psvr_send_command_sync(psvr_context *ctx, enum psvr_report_id id, uint8_t *payload, uint32_t length) {
+int psvr_send_command_sync(psvr_context *ctx, uint8_t id, uint8_t *payload, uint32_t length) {
 	return psvr_send_sync(PSVR_INTERFACE_HID_CONTROL, ctx, id, payload, length);
 }
 

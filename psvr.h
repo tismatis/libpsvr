@@ -48,7 +48,7 @@ PSVR_LIB void psvr_close(psvr_context *ctx);
 PSVR_LIB int psvr_send_sync(
 	enum morpheus_usb_interfaces interface,
 	psvr_context *ctx,
-	enum psvr_report_id id,
+	uint8_t id,
 	uint8_t *payload,
 	uint32_t length
 );
@@ -71,7 +71,7 @@ PSVR_LIB int psvr_read_sync(
 //Send a command to the Control interface
 PSVR_LIB int psvr_send_command_sync(
 	psvr_context *ctx,
-	enum psvr_report_id id,
+	uint8_t id,
 	uint8_t *payload,
 	uint32_t length
 );

@@ -32,6 +32,29 @@ private:
 };
 //---------------------------------------------
 
+
+//---------------------------------------------
+//Control Thread
+//---------------------------------------------
+class ControlThread : public QThread {
+	Q_OBJECT
+
+public:
+	ControlThread(struct psvr_context *ctx);
+
+public:
+	void run() override;
+	void stopThread();
+	
+signals:
+	void frameUpdate(void *frame);
+
+private:
+	struct psvr_context * ctx;
+};
+//---------------------------------------------
+
+
 //---------------------------------------------
 //Data Viewer Window
 //---------------------------------------------
@@ -45,6 +68,17 @@ public:
 
 public slots:
 	void sensorFrame(void *frame);
+	void controlFrame(void *frame);
+
+	void headsetOn();
+	void headsetOff();
+	void enableVRMode();
+	void enableVRMode2();
+	void getDeviceInfo();
+	void turnProcessorOff();
+	void recenter();
+
+	void sendManualCommand();
 
 private:
 	struct psvr_context *ctx;
@@ -52,5 +86,6 @@ private:
 	Ui_DataViewerClass ui;
 
 	SensorThread *sensorThread;
+	ControlThread *controlThread;
 };
 //---------------------------------------------
