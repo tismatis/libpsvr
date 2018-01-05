@@ -274,17 +274,17 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="0" colspan="2">
+           <item row="3" column="0">
             <widget class="QPushButton" name="btn_processorOff">
              <property name="text">
               <string>Turn Processor Off</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="0" colspan="2">
-            <widget class="QPushButton" name="btn_recenter">
+           <item row="3" column="1">
+            <widget class="QPushButton" name="btn_processorClear">
              <property name="text">
-              <string>Recenter</string>
+              <string>Clear Processor Buffer?</string>
              </property>
             </widget>
            </item>

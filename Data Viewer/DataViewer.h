@@ -76,7 +76,7 @@ public slots:
 	void enableVRMode2();
 	void getDeviceInfo();
 	void turnProcessorOff();
-	void recenter();
+	void clearProcesorBuffer();
 
 	void sendManualCommand();
 

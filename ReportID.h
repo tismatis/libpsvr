@@ -7,12 +7,14 @@
 
 enum psvr_report_id {
 	//length: 8 - 2 payloads
-	//enable - payload0: 0xFFFFFF00, payload1: bool
-	//enable2??? - payload0: 0x80FFFF00, payload1: bool
+	//enable - payload0: 0xFFFFFF00, payload1: bool //nothing?
+	//enable2??? - payload0: 0x80FFFF00, payload1: bool - does something
 	//enable3??? - payload0: 0x00FFFFFF, payload1: bool
 	//tracking test - payload0: (uint8_t[]){ value, 0x00, 0xFF, 0x00, 0xFF, 0xFF, 0xFF, 0xFF }, payload1: 0
 	//with tracking
-	eRID_VRMode = 0x11,
+	//I have no idea what this command does...
+	//formally VRMode.
+	eRID_Unknown0 = 0x11,
 
 	//length: 4 - 1 payload
 	//off - (uint8_t[]){0x01, 0x00, 0x00, 0x00}
@@ -51,7 +53,9 @@ enum psvr_report_id {
 	//length: 4 - 1 payload
 	//(uint8_t[]){ 0x00, 0x00, 0x00, 0x00 }
 	//accepts anything?
-	eRID_Recenter = 0x1b,
+	//dont know if this does anything
+	//formally known as recenter.
+	eRID_Unknown1 = 0x1b,
 
 	//length: 16 - 4 payloads
 	/*
@@ -80,10 +84,11 @@ enum psvr_report_id {
 	eRID_CinematicSettings = 0x21,
 	
 	//length: 4 - 1 payload
-	//(uint8_t[]){ 0x00, 0x00, 0x00, 0x00 }
-	eRID_CinematicMode = 0x23,
+	//Cinematic mode - { 0x00, 0x00, 0x00, 0x00 }
+	//VR Mode - { 0x01 0x00 0x00 0x00 }
+	eRID_SetMode = 0x23,
 
-	eRID_Unknown = 0x25,
+	eRID_Unknown2 = 0x25,
 	
 	//length: 8 - 2 payloads
 	/*

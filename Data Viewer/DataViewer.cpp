@@ -56,8 +56,24 @@ ControlThread::ControlThread(struct psvr_context *ctx) {
 void ControlThread::run() {
 	if (!ctx) return; //dont have a context, dont run.
 	psvr_control_frame frame;
+	//memset(&frame, 0, sizeof(psvr_control_frame));
 
 	forever {
+		/*psvr_read_control_sync(ctx, (uint8_t*)&frame, sizeof(psvr_control_frame_header));
+
+		usleep(10 * 1000);
+
+		if (frame.s.header.magic == 0xAA && frame.s.header.length <= 0x3C) {
+			psvr_read_control_sync(
+				ctx,
+				frame.s.data,
+				frame.s.header.length
+			);
+
+			emit frameUpdate(&frame);
+		}
+		memset(&frame, 0, sizeof(psvr_control_frame));*/
+
 		psvr_read_control_sync(ctx, (uint8_t*)&frame, sizeof(psvr_control_frame));
 		emit frameUpdate(&frame);
 	}
@@ -166,10 +182,10 @@ DataViewer::DataViewer(QWidget *parent)
 		SLOT(turnProcessorOff())
 	);
 	connect(
-		this->ui.btn_recenter,
+		this->ui.btn_processorClear,
 		SIGNAL(clicked()),
 		this,
-		SLOT(recenter())
+		SLOT(clearProcesorBuffer())
 	);
 
 	connect(
@@ -302,7 +318,7 @@ void DataViewer::controlFrame(void* data) {
 	//--------------------
 	ui.lbl_control_id->setText(hexToString(frame->s.header.r_id));
 	ui.lbl_control_status->setText(hexToString(frame->s.header.gp_id));
-	ui.lbl_control_start->setText(hexToString(frame->s.header.start));
+	ui.lbl_control_start->setText(hexToString(frame->s.header.magic));
 	ui.lbl_control_len->setText(hexToString(frame->s.header.length));
 
 	QString craw;
@@ -406,18 +422,14 @@ void DataViewer::headsetOff() {
 void DataViewer::enableVRMode() { //true vr mode
 	if (!ctx) return; //dont have a context, dont run.
 	ui.txt_control_log->append("Enabling VR Mode.");
-
-	uint8_t cmd[] = {
-		0xFF, 0xFF, 0xFF, 0x00,
-		0x00, 0x00, 0x00, 0x00
-	};
-	psvr_send_command_sync(ctx, eRID_VRMode, cmd, 8);
+	uint8_t data[] = { 0x01, 0x00, 0x00, 0x00 };
+	psvr_send_command_sync(ctx, eRID_SetMode, data, 4);
 }
 void DataViewer::enableVRMode2() { //cinematic mode
 	if (!ctx) return; //dont have a context, dont run.
 	ui.txt_control_log->append("Enabling Cinematic Mode.");
-	uint8_t on[] = { 0x00, 0x00, 0x00, 0x00 };
-	psvr_send_command_sync(ctx, eRID_CinematicMode, on, 8);
+	uint8_t data[] = { 0x00, 0x00, 0x00, 0x00 };
+	psvr_send_command_sync(ctx, eRID_SetMode, data, 4);
 }
 /*void DataViewer::enableCinematicMode() {
 	if (!ctx) return; //dont have a context, dont run.
@@ -435,12 +447,11 @@ void DataViewer::turnProcessorOff() {
 	uint8_t on[] = { 0x01, 0x00, 0x00, 0x00 };
 	psvr_send_command_sync(ctx, eRID_ProcessorPower, on, 4);
 }
-void DataViewer::recenter() {
+void DataViewer::clearProcesorBuffer() {
 	if (!ctx) return; //dont have a context, dont run.
-	ui.txt_control_log->append("Recentering.");
-
-	uint8_t cmd[] = { 0x00, 0x00, 0x00, 0x00 };
-	psvr_send_command_sync(ctx, eRID_Recenter, cmd, 4);
+	ui.txt_control_log->append("Clearing buffer?");
+	uint8_t data[] = { 0x00, 0x00, 0x00, 0x00 };
+	psvr_send_command_sync(ctx, eRID_ProcessorPower, data, 4);
 }
 
 void DataViewer::sendManualCommand() {

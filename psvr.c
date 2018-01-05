@@ -270,7 +270,6 @@ int psvr_read_sync(enum morpheus_usb_interfaces interface, psvr_context *ctx, ui
 		0
 	);
 
-
 	if (err != LIBUSB_SUCCESS) {
 		return err;
 	}

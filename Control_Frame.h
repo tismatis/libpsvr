@@ -16,7 +16,7 @@ enum psvr_report_type {
 struct psvr_control_frame_header {
 	uint8_t r_id;
 	uint8_t gp_id;
-	uint8_t start;
+	uint8_t magic;
 	uint8_t length;
 };
 
@@ -40,3 +40,4 @@ union psvr_control_frame_union {
 #pragma pack()
 
 typedef union psvr_control_frame_union psvr_control_frame;
+typedef struct psvr_control_frame_header psvr_control_frame_header;

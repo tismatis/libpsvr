@@ -162,9 +162,9 @@ int main(void) {
 	//uint8_t cmd[] = { 0x86, 0, 0, 0, 0, 0, 0, 0 };
 	//r = psvr_send_command_sync(ctx, eRID_DeviceInfo, cmd, 8);
 
-	/*union psvr_control_frame psvrFrame;
+	/*psvr_control_frame psvrFrame;
 	for (int i = 0; i < 10; i++) {
-		r = psvr_read_control_sync(ctx, (uint8_t *)&psvrFrame, sizeof(union psvr_control_frame)); //BLOCKING!!!
+		r = psvr_read_control_sync(ctx, (uint8_t *)&psvrFrame, sizeof(psvr_control_frame)); //BLOCKING!!!
 		print_control_data(&psvrFrame);
 		usleep(10 * 1000);
 	}*/
