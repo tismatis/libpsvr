@@ -15,7 +15,7 @@ enum psvr_report_id {
 	eRID_VRTracking = 0x11,
 
 	//length: 4 - 1 payload
-	//power - payload: (uint32_t)bool
+	//off - (uint8_t[]){0x01, 0x00, 0x00, 0x00}
 	eRID_ProcessorPower = 0x13,
 
 	//length: 16 - 4 payloads

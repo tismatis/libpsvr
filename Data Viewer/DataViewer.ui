@@ -146,7 +146,7 @@
            <item row="0" column="0">
             <widget class="QLabel" name="label_5">
              <property name="text">
-              <string>ID:</string>
+              <string>R-ID</string>
              </property>
             </widget>
            </item>
@@ -160,7 +160,7 @@
            <item row="1" column="0">
             <widget class="QLabel" name="label_14">
              <property name="text">
-              <string>Status:</string>
+              <string>Gp-ID</string>
              </property>
             </widget>
            </item>
@@ -368,14 +368,14 @@
            <item row="1" column="0">
             <widget class="QPushButton" name="btn_vrMode">
              <property name="text">
-              <string>Enable VR Mode</string>
+              <string>VR Mode w/Tracking</string>
              </property>
             </widget>
            </item>
            <item row="1" column="1">
             <widget class="QPushButton" name="btn_vrMode2">
              <property name="text">
-              <string>Enable VR Mode 2</string>
+              <string>VR Mode w/o Tracking</string>
              </property>
             </widget>
            </item>

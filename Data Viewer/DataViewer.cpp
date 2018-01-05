@@ -243,7 +243,7 @@ void DataViewer::sensorFrame(void *data) {
 	ui.lbl_reserved1->setText(reserved1);
 
 	ui.lbl_status_worn->setText(frame->s.status.worn ? "True" : "False");
-	ui.lbl_status_disp_active->setText(frame->s.status.display_active ? "True" : "False");
+	ui.lbl_status_disp_active->setText(frame->s.status.display_active ? "False" : "True");
 	ui.lbl_status_hdmi_dc->setText(frame->s.status.hdmi_disconnected ? "True" : "False");
 	ui.lbl_status_mic_mute->setText(frame->s.status.microphone_muted ? "True" : "False");
 	ui.lbl_status_headphone_connect->setText(frame->s.status.headphone_connected ? "True" : "False");
@@ -292,20 +292,20 @@ void DataViewer::controlFrame(void* data) {
 	//--------------------
 	//control frame info
 	//--------------------
-	ui.lbl_control_id->setText(hexToString(frame->s.id));
-	ui.lbl_control_status->setText(hexToString(frame->s.status));
+	ui.lbl_control_id->setText(hexToString(frame->s.r_id));
+	ui.lbl_control_status->setText(hexToString(frame->s.gp_id));
 	ui.lbl_control_start->setText(hexToString(frame->s.start));
 	ui.lbl_control_len->setText(hexToString(frame->s.length));
 
 	QString craw;
-	for (int i = 0; i < 64; i++) {
+	for (int i = 0; i < 68; i++) {
 		craw.append(hexToString(frame->raw[i]));
 		craw.append(" ");
 	}
 	ui.lbl_control_raw->setText(craw);
 	//--------------------
 
-	switch (frame->s.id) {
+	switch (frame->s.r_id) {
 	case eRT_Info:
 	{
 		QString reserved0;
@@ -410,7 +410,7 @@ void DataViewer::headsetOff() {
 }
 void DataViewer::enableVRMode() {
 	if (!ctx) return; //dont have a context, dont run.
-	ui.txt_control_log->append("Enabling VR Mode - method 1.");
+	ui.txt_control_log->append("Enabling VR Mode w/tracking.");
 	uint32_t payload[2];
 	payload[0] = 0xFFFFFF00;
 	payload[1] = 0x00000000;
@@ -419,7 +419,7 @@ void DataViewer::enableVRMode() {
 }
 void DataViewer::enableVRMode2() {
 	if (!ctx) return; //dont have a context, dont run.
-	ui.txt_control_log->append("Enabling VR Mode - method 2.");
+	ui.txt_control_log->append("Enabling VR Mode w/o tracking.");
 	uint32_t on = 1;
 	psvr_send_command_sync(ctx, eRID_VRMode, (uint8_t *)&on, 8);
 }
@@ -436,8 +436,8 @@ void DataViewer::getDeviceInfo() {
 void DataViewer::turnProcessorOff() {
 	if (!ctx) return; //dont have a context, dont run.
 	ui.txt_control_log->append("Turning Processor Off.");
-	uint32_t on = 1;
-	psvr_send_command_sync(ctx, eRID_ProcessorPower, (uint8_t*)&on, 8);
+	uint8_t on[] = { 0x01, 0x00, 0x00, 0x00 };
+	psvr_send_command_sync(ctx, eRID_ProcessorPower, on, 4);
 }
 void DataViewer::recenter() {
 	if (!ctx) return; //dont have a context, dont run.

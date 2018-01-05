@@ -214,7 +214,8 @@ int psvr_send_sync(enum morpheus_usb_interfaces interface, psvr_context *ctx, ui
 	if (!ctx || !(ctx->claimed_interfaces & (1 << interface))) return LIBUSB_ERROR_OTHER; //only execute if we have claimed the interface
 
 	struct morpheus_control_command command;
-	command.header.id = id;
+	command.header.r_id = id;
+	command.header.gp_id = 0x00;
 	command.header.magic = 0xAA;
 	command.header.length = length;
 	memcpy(command.payload, payload, length);

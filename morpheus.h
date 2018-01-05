@@ -38,9 +38,9 @@ enum morpheus_usb_interfaces {
 
 #pragma pack(1)
 struct morpheus_control_command_header {
-	uint8_t id;
-	uint8_t status;
-	uint8_t magic;
+	uint8_t r_id; //see ReportID.h
+	uint8_t gp_id; //mainly 0x00
+	uint8_t magic; //should be 0xAA
 	uint8_t length;
 };
 
