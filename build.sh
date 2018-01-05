@@ -1,1 +1,0 @@
-gcc -shared -o libpsvr.so -fPIC psvr.c $(pkg-config --libs --cflags libusb-1.0)

@@ -17,8 +17,8 @@
 
 #include "PSVR_Common.h"
 
-#include "psvr.h"
 #include "morpheus.h"
+#include "psvr.h"
 
 struct psvr_context {
 	libusb_context *usb;
