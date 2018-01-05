@@ -20,3 +20,5 @@
 /Data Viewer/x64/Release
 /commands.xlsx
 /~$commands.xlsx
+/psvr.o
+/libpsvr.a

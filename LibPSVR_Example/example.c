@@ -40,7 +40,7 @@ static int command_enable_vr_mode() {
 	payload[0] = 0xFFFFFF00;
 	payload[1] = 0x00000000;
 	printf("Enable VR Mode\n");
-	return psvr_send_command_sync(ctx, eRID_VRTracking, (uint8_t *)&payload, 8);
+	return psvr_send_command_sync(ctx, eRID_VRMode, (uint8_t *)&payload, 8);
 }
 
 static int command_get_device_info() {
@@ -48,30 +48,14 @@ static int command_get_device_info() {
 
 	uint8_t cmd[] = { 0x80, 0, 0, 0, 0, 0, 0, 0 };
 	int r = psvr_send_command_sync(ctx, eRID_DeviceInfo, cmd, 8);
-	printf("CMD Result: %i\n", r);
-
-	psvr_device_info sinfo;
-	int sr = psvr_read_control_sync(ctx, (uint8_t *)&sinfo, sizeof(psvr_device_info));
-	printf("Sensor Result: %i\n", sr);
-	printf("Version: %i.%i\n", sinfo.version.major, sinfo.version.minor);
-	printf("Serial: %s\n", sinfo.serialNumber);
-
-	printf("Raw Data:\n");
-	for (int i = 0; i < 48; i++) {
-		printf("%i ", sinfo.raw[i]);
-	}
-	printf("\n");
 
 	return r;
 }
 
 static void print_control_data(psvr_control_frame *frame) {
-	switch (frame->id) {
+	switch (frame->header.r_id) {
 	case eRT_Info:
 	{
-		frame->dinfo.version.major += 0x30;
-		frame->dinfo.version.minor += 0x30;
-
 		printf("Info:\n");
 		printf("- major: %i\n", frame->dinfo.version.major);
 		printf("- minor: %i\n", frame->dinfo.version.minor);
@@ -81,7 +65,7 @@ static void print_control_data(psvr_control_frame *frame) {
 		printf("\n");
 
 		//debugging based on raw data.
-		unsigned int major = frame->data[7] + 0x30;
+		/*unsigned int major = frame->data[7] + 0x30;
 		unsigned int minor = frame->data[8] + 0x30;
 
 		uint8_t serial[16];
@@ -93,7 +77,7 @@ static void print_control_data(psvr_control_frame *frame) {
 		printf("- serial: %s\n", serial);
 		printf("- serial raw: ");
 		for (int i = 0; i < 16; i++) printf("%i ", serial[i]);
-		printf("\n");
+		printf("\n");*/
 	}
 		break;
 	case eRT_Status:

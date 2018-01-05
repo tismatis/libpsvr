@@ -2,13 +2,29 @@
 C library for Morpheus (Playstation VR). Tested with Ubuntu 15.10 + libusb-1.0.20.
 
 ## Build
+##### dll/shared object
 ```
-$ ./build.sh
+$ make
 ```
+or
+```
+$ make shared
+```
+##### library
+```
+$ make lib
+```
+
 ## Example
+##### using dll/shared object
 ```
-$ gcc example.c -I/path_to_psvr_h -L/path_to_libpsvr_so -lpsvr
+$ make example
 ```
+##### using library
+```
+$ make example-lib
+```
+
 ## OS X (El Capitan)
 For quick start, use brew before build.  
 
