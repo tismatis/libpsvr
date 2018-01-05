@@ -222,7 +222,15 @@ DataViewer::~DataViewer() {
 	psvr_close(this->ctx); //close the context
 }
 
-QString hexToString(uint8_t x, int bytesize = 1) { return QString("0x%1").arg(x, bytesize * 2, 16, QLatin1Char('0')); }
+QString hexToString(uint8_t x) {
+	return QString("0x%1").arg(x, 2, 16, QLatin1Char('0'));
+}
+QString hexToString(uint16_t x) {
+	return QString("0x%1").arg(x, 4, 16, QLatin1Char('0'));
+}
+QString hexToString(uint32_t x) {
+	return QString("0x%1").arg(x, 8, 16, QLatin1Char('0'));
+}
 
 void DataViewer::sensorFrame(void *data) {
 	psvr_sensor_frame* frame = (psvr_sensor_frame*)data;
@@ -292,10 +300,10 @@ void DataViewer::controlFrame(void* data) {
 	//--------------------
 	//control frame info
 	//--------------------
-	ui.lbl_control_id->setText(hexToString(frame->s.r_id));
-	ui.lbl_control_status->setText(hexToString(frame->s.gp_id));
-	ui.lbl_control_start->setText(hexToString(frame->s.start));
-	ui.lbl_control_len->setText(hexToString(frame->s.length));
+	ui.lbl_control_id->setText(hexToString(frame->s.header.r_id));
+	ui.lbl_control_status->setText(hexToString(frame->s.header.gp_id));
+	ui.lbl_control_start->setText(hexToString(frame->s.header.start));
+	ui.lbl_control_len->setText(hexToString(frame->s.header.length));
 
 	QString craw;
 	for (int i = 0; i < 68; i++) {
@@ -305,39 +313,26 @@ void DataViewer::controlFrame(void* data) {
 	ui.lbl_control_raw->setText(craw);
 	//--------------------
 
-	switch (frame->s.r_id) {
+	switch (frame->s.header.r_id) {
 	case eRT_Info:
 	{
-		QString reserved0;
-		for (int i = 0; i < 3; i++) {
-			reserved0.append(hexToString(frame->s.dinfo.s2.reserved0[i], 2));
-			reserved0.append(" ");
-		}
-		ui.lbl_info_reserved0->setText(reserved0);
+		ui.lbl_info_reserved0->setText(hexToString(frame->s.dinfo.s.reserved0));
+		ui.lbl_info_major->setText(QString::number(frame->s.dinfo.s.version.major));
+		ui.lbl_info_minor->setText(QString::number(frame->s.dinfo.s.version.minor));
 
-		ui.lbl_info_major->setText(QString::number(frame->s.dinfo.s2.version.major));
-		ui.lbl_info_minor->setText(QString::number(frame->s.dinfo.s2.version.minor));
+		ui.lbl_info_reserved1->setText(hexToString(frame->s.dinfo.s.reserved1));
+		ui.lbl_info_reserved2->setText(hexToString(frame->s.dinfo.s.reserved2));
+		ui.lbl_info_reserved3->setText(hexToString(frame->s.dinfo.s.reserved3));
 
-		QString reserved1;
-		for (int i = 0; i < 3; i++) {
-			reserved1.append(hexToString(frame->s.dinfo.s2.reserved1[i]));
-			reserved1.append(" ");
-		}
-		ui.lbl_info_reserved1->setText(reserved1);
+		ui.lbl_info_serial->setText(QString::fromLatin1((const char*)frame->s.dinfo.s.serialNumber, 16));
 
-		QString serial;
-		for (int i = 0; i < 16; i++) {
-			serial.append((const char*)frame->s.dinfo.s2.serialNumber[i]);
-			serial.append(" ");
-		}
-		ui.lbl_info_serial->setText(serial);
 
-		QString reserved2;
-		for (int i = 0; i < 21; i++) {
-			reserved2.append(hexToString(frame->s.dinfo.s2.reserved2[i]));
-			reserved2.append(" ");
+		QString reserved4;
+		for (int i = 0; i < 5; i++) {
+			reserved4.append(hexToString(frame->s.dinfo.s.reserved4[i]));
+			reserved4.append(" ");
 		}
-		ui.lbl_info_reserved2->setText(reserved2);
+		ui.lbl_info_reserved4->setText(reserved4);
 
 		QString raw;
 		for (int i = 0; i < 48; i++) {
@@ -358,7 +353,7 @@ void DataViewer::controlFrame(void* data) {
 		ui.lbl_cStatus_cec->setText(frame->s.dstatus.s.cec ? "True" : "False");
 		ui.lbl_cStatus_mReserved1->setText(frame->s.dstatus.s.maskreserved1 ? "True" : "False");
 		ui.lbl_cStatus_vol->setText(QString::number(frame->s.dstatus.s.volume));
-		ui.lbl_cStatus_reserved0->setText(hexToString(frame->s.dstatus.s.reserved0, 2));
+		ui.lbl_cStatus_reserved0->setText(hexToString(frame->s.dstatus.s.reserved0));
 		ui.lbl_cStatus_bridgeOutputID->setText(hexToString(frame->s.dstatus.s.bridgeOutputID));
 
 		QString raw;
@@ -372,7 +367,7 @@ void DataViewer::controlFrame(void* data) {
 	case eRT_Unsolicited:
 	{
 		ui.lbl_report_id->setText(hexToString(frame->s.ureport.s.id));
-		ui.lbl_report_code->setText(hexToString(frame->s.ureport.s.code));
+		ui.lbl_report_code->setText(hexToString((uint8_t)frame->s.ureport.s.code));
 
 		QString msg;
 		for (int i = 0; i < 58; i++) {
@@ -408,20 +403,21 @@ void DataViewer::headsetOff() {
 	uint32_t on = 0;
 	psvr_send_command_sync(ctx, eRID_HeadsetPower, (uint8_t*)&on, 4);
 }
-void DataViewer::enableVRMode() {
+void DataViewer::enableVRMode() { //true vr mode
 	if (!ctx) return; //dont have a context, dont run.
-	ui.txt_control_log->append("Enabling VR Mode w/tracking.");
-	uint32_t payload[2];
-	payload[0] = 0xFFFFFF00;
-	payload[1] = 0x00000000;
-	printf("Enable VR Mode\n");
-	psvr_send_command_sync(ctx, eRID_VRTracking, (uint8_t *)&payload, 8);
+	ui.txt_control_log->append("Enabling VR Mode.");
+
+	uint8_t cmd[] = {
+		0xFF, 0xFF, 0xFF, 0x00,
+		0x00, 0x00, 0x00, 0x00
+	};
+	psvr_send_command_sync(ctx, eRID_VRMode, cmd, 8);
 }
-void DataViewer::enableVRMode2() {
+void DataViewer::enableVRMode2() { //cinematic mode
 	if (!ctx) return; //dont have a context, dont run.
-	ui.txt_control_log->append("Enabling VR Mode w/o tracking.");
-	uint32_t on = 1;
-	psvr_send_command_sync(ctx, eRID_VRMode, (uint8_t *)&on, 8);
+	ui.txt_control_log->append("Enabling Cinematic Mode.");
+	uint8_t on[] = { 0x00, 0x00, 0x00, 0x00 };
+	psvr_send_command_sync(ctx, eRID_CinematicMode, on, 8);
 }
 /*void DataViewer::enableCinematicMode() {
 	if (!ctx) return; //dont have a context, dont run.
