@@ -75,6 +75,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BMI055Integrator.cpp" />
     <ClCompile Include="DataViewer.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_DataViewer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -88,6 +89,7 @@
     <ClCompile Include="GeneratedFiles\Release\moc_DataViewer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Madgwick.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -115,7 +117,9 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BMI055Integrator.h" />
     <ClInclude Include="GeneratedFiles\ui_DataViewer.h" />
+    <ClInclude Include="Madgwick.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DataViewer.qrc">

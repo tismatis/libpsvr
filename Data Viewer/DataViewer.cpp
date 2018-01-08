@@ -1,6 +1,13 @@
 #include "DataViewer.h"
 #include "psvr.h"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/quaternion.hpp"
+#define GLM_ENABLE_EXPERIMENTAL
+#include "glm/gtx/euler_angles.hpp"
+
+#include "BMI055Integrator.h"
+
 //---------------------------------------------
 //Sensor Thread
 //---------------------------------------------
@@ -8,6 +15,11 @@ SensorThread::SensorThread(struct psvr_context *ctx) {
 	this->ctx = ctx;
 	this->running = true;
 	this->updateSpd = 2;
+
+	this->paused = false;
+}
+
+SensorThread::~SensorThread() {
 }
 
 void SensorThread::run() {
@@ -42,6 +54,14 @@ void SensorThread::run() {
 
 void SensorThread::setUpdateSpeed(int spd) { this->updateSpd = spd; }
 void SensorThread::stopThread() { this->running = false; }
+/*void SensorThread::pauseData() {
+	if (this->paused)
+		this->pauseMutex->unlock();
+	else
+		this->pauseMutex->lock();
+
+	this->paused = !this->paused;
+}*/
 //---------------------------------------------
 
 
@@ -99,19 +119,19 @@ DataViewer::DataViewer(QWidget *parent)
 
 	DataViewer::loggingArea = ui.txt_control_log;
 
-	psvr_log logger = DataViewer::psvr_logger;
-	psvr_set_log(&logger);
+	psvr_set_log((psvr_log*)DataViewer::psvr_logger);
 
 	psvr_context *ctx = nullptr;
+	this->ctx = nullptr;
 
 	int err = psvr_open(&ctx); //open psvr context
-
-	this->ctx = ctx;
 
 	this->sensorThread = nullptr;
 	this->controlThread = nullptr;
 
 	if (err == 0) {
+		this->ctx = ctx;
+
 		ui.txt_control_log->append("Connection Established.");
 
 		this->sensorThread = new SensorThread(this->ctx);
@@ -194,6 +214,21 @@ DataViewer::DataViewer(QWidget *parent)
 		this,
 		SLOT(sendManualCommand())
 	);
+
+	connect(
+		this->ui.btn_recalibrate,
+		SIGNAL(clicked()),
+		this,
+		SLOT(recalibrate())
+	);
+	connect(
+		this->ui.btn_recenter,
+		SIGNAL(clicked()),
+		this,
+		SLOT(recenter())
+	);
+
+	BMI055Integrator::Init(BMI055Integrator::AScale::AFS_2G, BMI055Integrator::Gscale::GFS_2000DPS);
 }
 
 DataViewer::~DataViewer() {
@@ -235,7 +270,7 @@ DataViewer::~DataViewer() {
 		this->controlThread = nullptr;
 	}
 
-	psvr_close(this->ctx); //close the context
+	if (this->ctx) psvr_close(this->ctx); //close the context
 }
 
 QString hexToString(uint8_t x) {
@@ -248,66 +283,108 @@ QString hexToString(uint32_t x) {
 	return QString("0x%1").arg(x, 8, 16, QLatin1Char('0'));
 }
 
+const glm::quat fixQuat(glm::quat quat) {
+	//cant figure out the math to swap x and y axis in quaternion, doing with euler angles
+	auto tmp = glm::eulerAngles(quat);
+	return glm::normalize(glm::quat_cast(glm::eulerAngleYXZ(-tmp.x, -tmp.y, -tmp.z)));
+}
+
 void DataViewer::sensorFrame(void *data) {
 	psvr_sensor_frame* frame = (psvr_sensor_frame*)data;
 
-	ui.lbl_button_reserved->setText(frame->s.button.reserved ? "True" : "False");
-	ui.lbl_btn_plus->setText(frame->s.button.plus ? "True" : "False");
-	ui.lbl_btn_minus->setText(frame->s.button.minus ? "True" : "False");
-	ui.lbl_btn_mute->setText(frame->s.button.mute ? "True" : "False");
+	{ //sensors
+		ui.lbl_s2_btn_reserved->setText(frame->s.button.reserved ? "True" : "False");
+		ui.lbl_s2_btn_plus->setText(frame->s.button.reserved ? "True" : "False");
+		ui.lbl_s2_btn_minus->setText(frame->s.button.reserved ? "True" : "False");
+		ui.lbl_s2_btn_mute->setText(frame->s.button.reserved ? "True" : "False");
 
-	ui.lbl_reserved0->setText(hexToString(frame->s.reserved0));
-	ui.lbl_volume->setText(QString::number(frame->s.volume));
+		ui.lbl_s2_reserved0->setText(hexToString(frame->s.reserved0));
+		ui.lbl_s2_volume->setText(QString::number(frame->s.volume));
 
-	QString reserved1;
-	for (int i = 0; i < 5; i++) {
-		reserved1.append(hexToString(frame->s.reserved1[i]));
-		reserved1.append(" ");
+		QString reserved1;
+		for (int i = 0; i < 5; i++) {
+			reserved1.append(hexToString(frame->s.reserved1[i]));
+			reserved1.append(" ");
+		}
+		ui.lbl_s2_reserved1->setText(reserved1);
+
+		ui.lbl_s2_status_worn->setText(frame->s.status.worn ? "True" : "False");
+		ui.lbl_s2_status_display->setText(frame->s.status.display_active ? "False" : "True");
+		ui.lbl_s2_status_hdmi->setText(frame->s.status.hdmi_disconnected ? "True" : "False");
+		ui.lbl_s2_status_micMute->setText(frame->s.status.microphone_muted ? "True" : "False");
+		ui.lbl_s2_status_headphone->setText(frame->s.status.headphone_connected ? "True" : "False");
+		ui.lbl_s2_status_reserved->setText(frame->s.status.reserved ? "True" : "False");
+		ui.lbl_s2_status_tick->setText(frame->s.status.tick ? "True" : "False");
+
+		QString reserved2;
+		for (int i = 0; i < 7; i++) {
+			reserved2.append(hexToString(frame->s.reserved2[i]));
+			reserved2.append(" ");
+		}
+		ui.lbl_s2_reserved2->setText(reserved2);
+
+		ui.lbl_s2_data0_timestamp->setText(QString::number(frame->s.data[0].timestamp));
+		ui.lbl_s2_data0_gyro_yaw->setText(QString::number(frame->s.data[0].gyro.yaw));
+		ui.lbl_s2_data0_gyro_pitch->setText(QString::number(frame->s.data[0].gyro.pitch));
+		ui.lbl_s2_data0_gyro_roll->setText(QString::number(frame->s.data[0].gyro.roll));
+		ui.lbl_s2_data0_accel_x->setText(QString::number(frame->s.data[0].accel.x));
+		ui.lbl_s2_data0_accel_y->setText(QString::number(frame->s.data[0].accel.y));
+		ui.lbl_s2_data0_accel_z->setText(QString::number(frame->s.data[0].accel.z));
+
+		ui.lbl_s2_data1_timestamp->setText(QString::number(frame->s.data[1].timestamp));
+		ui.lbl_s2_data1_gyro_yaw->setText(QString::number(frame->s.data[1].gyro.yaw));
+		ui.lbl_s2_data1_gyro_pitch->setText(QString::number(frame->s.data[1].gyro.pitch));
+		ui.lbl_s2_data1_gyro_roll->setText(QString::number(frame->s.data[1].gyro.roll));
+		ui.lbl_s2_data1_accel_x->setText(QString::number(frame->s.data[1].accel.x));
+		ui.lbl_s2_data1_accel_y->setText(QString::number(frame->s.data[1].accel.y));
+		ui.lbl_s2_data1_accel_z->setText(QString::number(frame->s.data[1].accel.z));
+
+		ui.lbl_s2_calstatus->setText(QString::number(frame->s.calStatus));
+		ui.lbl_s2_ready->setText(QString::number(frame->s.ready));
+
+		QString reserved3;
+		for (int i = 0; i < 3; i++) {
+			reserved3.append(hexToString(frame->s.reserved3[i]));
+			reserved3.append(" ");
+		}
+		ui.lbl_s2_reserved3->setText(reserved3);
+
+		ui.lbl_s2_voltVal->setText(QString::number(frame->s.voltageVal));
+		ui.lbl_s2_voltRef->setText(QString::number(frame->s.voltageRef));
+		ui.lbl_s2_irSensor->setText(QString::number(frame->s.irSensor));
+
+		QString reserved4;
+		for (int i = 0; i < 5; i++) {
+			reserved4.append(hexToString(frame->s.reserved4[i]));
+			reserved4.append(" ");
+		}
+		ui.lbl_s2_reserved4->setText(reserved4);
+
+		ui.lbl_s2_pakSeq->setText(QString::number(frame->s.packetSeq));
+
+		QString raw;
+		for (int i = 0; i < 64; i++) {
+			raw.append(hexToString(frame->raw[i]));
+			raw.append(" ");
+		}
+		ui.lbl_sensor_raw->setText(raw);
 	}
-	ui.lbl_reserved1->setText(reserved1);
 
-	ui.lbl_status_worn->setText(frame->s.status.worn ? "True" : "False");
-	ui.lbl_status_disp_active->setText(frame->s.status.display_active ? "False" : "True");
-	ui.lbl_status_hdmi_dc->setText(frame->s.status.hdmi_disconnected ? "True" : "False");
-	ui.lbl_status_mic_mute->setText(frame->s.status.microphone_muted ? "True" : "False");
-	ui.lbl_status_headphone_connect->setText(frame->s.status.headphone_connected ? "True" : "False");
-	ui.lbl_status_reserved->setText(frame->s.status.reserved ? "True" : "False");
-	ui.lbl_status_tick->setText(frame->s.status.tick ? "True" : "False");
+	{ //sensors 2
+		glm::quat quat = fixQuat(BMI055Integrator::Parse((void *)frame));
+		auto euler = BMI055Integrator::ToEuler(&quat);
 
-	QString reserved2;
-	for (int i = 0; i < 11; i++) {
-		reserved2.append(hexToString(frame->s.reserved2[i]));
-		reserved2.append(" ");
+		ui.lbl_s2_pitch->setText(QString::number(glm::degrees(euler.x)));
+		ui.lbl_s2_yaw->setText(QString::number(glm::degrees(euler.y)));
+		ui.lbl_s2_roll->setText(QString::number(glm::degrees(euler.z)));
+
+		ui.lbl_s2_qw->setText(QString::number(glm::degrees(quat.w)));
+		ui.lbl_s2_qx->setText(QString::number(glm::degrees(quat.x)));
+		ui.lbl_s2_qy->setText(QString::number(glm::degrees(quat.y)));
+		ui.lbl_s2_qz->setText(QString::number(glm::degrees(quat.z)));
+
+		ui.lbl_s2_status->setText(BMI055Integrator::calibrating ? "Calibrating" : "OK");
 	}
-	ui.lbl_reserved2->setText(reserved2);
-
-	ui.lbl_data1_gyro_yaw->setText(QString::number(frame->s.data[0].gyro.yaw));
-	ui.lbl_data1_gyro_pitch->setText(QString::number(frame->s.data[0].gyro.pitch));
-	ui.lbl_data1_gyro_roll->setText(QString::number(frame->s.data[0].gyro.roll));
-	ui.lbl_data1_accel_x->setText(QString::number(frame->s.data[0].accel.x));
-	ui.lbl_data1_accel_y->setText(QString::number(frame->s.data[0].accel.y));
-	ui.lbl_data1_accel_z->setText(QString::number(frame->s.data[0].accel.z));
-
-	ui.lbl_data2_gyro_yaw->setText(QString::number(frame->s.data[1].gyro.yaw));
-	ui.lbl_data2_gyro_pitch->setText(QString::number(frame->s.data[1].gyro.pitch));
-	ui.lbl_data2_gyro_roll->setText(QString::number(frame->s.data[1].gyro.roll));
-	ui.lbl_data2_accel_x->setText(QString::number(frame->s.data[1].accel.x));
-	ui.lbl_data2_accel_y->setText(QString::number(frame->s.data[1].accel.y));
-	ui.lbl_data2_accel_z->setText(QString::number(frame->s.data[1].accel.z));
-
-	QString reserved3;
-	for (int i = 0; i < 12; i++) {
-		reserved3.append(hexToString(frame->s.reserved3[i]));
-		reserved3.append(" ");
-	}
-	ui.lbl_reserved3->setText(reserved3);
-
-	QString raw;
-	for (int i = 0; i < 64; i++) {
-		raw.append(hexToString(frame->raw[i]));
-		raw.append(" ");
-	}
-	ui.lbl_sensor_raw->setText(raw);
 }
 
 void DataViewer::controlFrame(void* data) {
@@ -446,6 +523,46 @@ void DataViewer::turnProcessorOff() {
 	ui.txt_control_log->append("Turning Processor Off.");
 	uint8_t on[] = { 0x01, 0x00, 0x00, 0x00 };
 	psvr_send_command_sync(ctx, eRID_ProcessorPower, on, 4);
+
+	/*if (this->ctx) {
+		ui.txt_control_log->append("Disconnecting.");
+		if (this->sensorThread) {
+			this->sensorThread->stopThread();
+
+			disconnect(
+				this->ui.cmbx_update_spd,
+				SIGNAL(currentIndexChanged(int)),
+				this->sensorThread,
+				SLOT(setUpdateSpeed(int))
+			);
+			disconnect(
+				this->sensorThread,
+				SIGNAL(frameUpdate(void*)),
+				this,
+				SLOT(sensorFrame(void*))
+			);
+
+			delete this->sensorThread;
+			this->sensorThread = nullptr;
+		}
+
+		if (this->controlThread) {
+			this->controlThread->stopThread();
+
+			disconnect(
+				this->controlThread,
+				SIGNAL(frameUpdate(void*)),
+				this,
+				SLOT(controlFrame(void*))
+			);
+
+			delete this->controlThread;
+			this->controlThread = nullptr;
+		}
+
+		psvr_close(this->ctx);
+		this->ctx = nullptr;
+	}*/
 }
 void DataViewer::clearProcesorBuffer() {
 	if (!ctx) return; //dont have a context, dont run.
@@ -503,6 +620,14 @@ void DataViewer::sendManualCommand() {
 	qDebug() << array1.toHex();     // to have a printable form use "toHex()"!
 	qDebug() << array2.toHex();
 	*/
+}
+
+void DataViewer::recenter() {
+	BMI055Integrator::Recenter();
+}
+
+void DataViewer::recalibrate() {
+	BMI055Integrator::Recalibrate();
 }
 //---------------------------------------------
 

@@ -14,6 +14,7 @@ class SensorThread : public QThread {
 
 public:
 	SensorThread(struct psvr_context *ctx);
+	~SensorThread();
 
 public:
 	void run() override;
@@ -29,6 +30,7 @@ private:
 	struct psvr_context * ctx;
 	bool running;
 	int updateSpd;
+	bool paused;
 };
 //---------------------------------------------
 
@@ -79,6 +81,9 @@ public slots:
 	void clearProcesorBuffer();
 
 	void sendManualCommand();
+
+	void recenter();
+	void recalibrate();
 
 private:
 	struct psvr_context *ctx;

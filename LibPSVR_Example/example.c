@@ -36,11 +36,9 @@ static int command_set_power(uint32_t on) {
 }
 
 static int command_enable_vr_mode() {
-	uint32_t payload[2];
-	payload[0] = 0xFFFFFF00;
-	payload[1] = 0x00000000;
+	uint8_t payload[] = { 0x01, 0x00, 0x00, 0x00 };
 	printf("Enable VR Mode\n");
-	return psvr_send_command_sync(ctx, eRID_VRMode, (uint8_t *)&payload, 8);
+	return psvr_send_command_sync(ctx, eRID_SetMode, payload, 8);
 }
 
 static int command_get_device_info() {

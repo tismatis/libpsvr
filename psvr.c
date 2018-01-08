@@ -51,7 +51,13 @@ void psvr_printf(const char* msg, ...) {
 }
 
 int psvr_open(psvr_context **ctx) {
-	int i;
+	return psvr_open_ex(
+		ctx,
+		(1 << PSVR_INTERFACE_HID_SENSOR) |
+		(1 << PSVR_INTERFACE_HID_CONTROL)
+	);
+
+	/*int i;
 	int err;
 	libusb_device *device;
 	psvr_context *_ctx = NULL;
@@ -127,7 +133,7 @@ int psvr_open(psvr_context **ctx) {
 
 error:
 	psvr_close(_ctx);
-	return -1;
+	return -1;*/
 }
 
 int psvr_open_ex(psvr_context **ctx, int interfaces_to_claim) {
@@ -167,9 +173,9 @@ int psvr_open_ex(psvr_context **ctx, int interfaces_to_claim) {
 				MORPHEUS_CONFIGURATION_PSVR,
 				&_ctx->usb_descriptor
 			)
-		)
+			)
 		!= LIBUSB_SUCCESS
-	) {
+		) {
 		psvr_printf("Get config descriptor failed");
 		goto error;
 	}
@@ -196,10 +202,10 @@ int psvr_open_ex(psvr_context **ctx, int interfaces_to_claim) {
 			if (err != LIBUSB_SUCCESS) {
 				psvr_printf("Interface #%d claim failed", i);
 				goto error;
-			}
-			_ctx->claimed_interfaces |= mask;
 		}
+			_ctx->claimed_interfaces |= mask;
 	}
+}
 
 	*ctx = _ctx;
 
@@ -250,6 +256,12 @@ int psvr_send_raw_sync(enum morpheus_usb_interfaces interface, psvr_context *ctx
 int psvr_read_sync(enum morpheus_usb_interfaces interface, psvr_context *ctx, uint8_t *payload, uint32_t length) {
 	if (!ctx || !(ctx->claimed_interfaces & (1 << interface))) return LIBUSB_ERROR_OTHER; //only execute if we have claimed the interface
 
+	return psvr_read_sync_timeout(interface, ctx, payload, length, 0);
+}
+
+int psvr_read_sync_timeout(enum morpheus_usb_interfaces interface, psvr_context *ctx, uint8_t *payload, uint32_t length, uint32_t timeout) {
+	if (!ctx || !(ctx->claimed_interfaces & (1 << interface))) return LIBUSB_ERROR_OTHER; //only execute if we have claimed the interface
+
 	int ep;
 	int xferred = 0;
 	int err;
@@ -267,7 +279,7 @@ int psvr_read_sync(enum morpheus_usb_interfaces interface, psvr_context *ctx, ui
 		payload,
 		length,
 		&xferred,
-		0
+		timeout
 	);
 
 	if (err != LIBUSB_SUCCESS) {
@@ -289,20 +301,23 @@ int psvr_read_control_sync(psvr_context *ctx, uint8_t *payload, uint32_t length)
 	return psvr_read_sync(PSVR_INTERFACE_HID_CONTROL, ctx, payload, length);
 }
 
-void psvr_close(psvr_context *ctx){
+void psvr_close(psvr_context *ctx) {
 	if (!ctx) return;
 
 	int i = 0;
 
-	while (ctx->claimed_interfaces) {
-		int mask = 1 << i;
-		if (ctx->claimed_interfaces & mask) {
-			libusb_release_interface(ctx->usb_handle, i);
-			psvr_printf("Interface #%d released", i);
-			ctx->claimed_interfaces &= ~mask;
+	if (ctx->usb_handle) {
+		while (ctx->claimed_interfaces) {
+			int mask = 1 << i;
+			if (ctx->claimed_interfaces & mask) {
+				libusb_release_interface(ctx->usb_handle, i);
+				psvr_printf("Interface #%d released", i);
+				ctx->claimed_interfaces &= ~mask;
+			}
+			i++;
 		}
-		i++;
 	}
+
 	if (ctx->usb_descriptor != NULL) {
 		libusb_free_config_descriptor(ctx->usb_descriptor);
 		psvr_printf("Descriptor is freed");

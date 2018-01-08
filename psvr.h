@@ -75,6 +75,15 @@ PSVR_API int psvr_read_sync(
 	uint32_t length
 );
 
+//Read data from a specific interface within a millisecond timeout
+PSVR_API int psvr_read_sync_timeout(
+	enum morpheus_usb_interfaces interface,
+	psvr_context *ctx,
+	uint8_t *payload,
+	uint32_t length,
+	uint32_t timeout
+);
+
 //Send a command to the Control interface
 PSVR_API int psvr_send_command_sync(
 	psvr_context *ctx,

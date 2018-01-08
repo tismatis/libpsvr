@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>911</width>
-    <height>918</height>
+    <width>709</width>
+    <height>884</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -624,11 +624,11 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="Sensors_tab">
+      <widget class="QWidget" name="tab">
        <attribute name="title">
         <string>Sensors</string>
        </attribute>
-       <layout class="QFormLayout" name="formLayout">
+       <layout class="QFormLayout" name="formLayout_17">
         <item row="0" column="0">
          <widget class="QLabel" name="label">
           <property name="text">
@@ -668,342 +668,354 @@
           </item>
          </widget>
         </item>
-        <item row="5" column="0" colspan="2">
-         <widget class="QGroupBox" name="groupBox">
-          <property name="title">
-           <string>Status</string>
-          </property>
-          <layout class="QFormLayout" name="formLayout_3">
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_34">
-             <property name="text">
-              <string>Worn:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QLabel" name="lbl_status_worn">
-             <property name="text">
-              <string>NAN</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_17">
-             <property name="text">
-              <string>Display Active:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_18">
-             <property name="text">
-              <string>HDMI Disconnected:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_19">
-             <property name="text">
-              <string>Microphone Muted:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="label_20">
-             <property name="text">
-              <string>Headphone Connected:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="label_21">
-             <property name="text">
-              <string>Reserved:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="label_22">
-             <property name="text">
-              <string>Tick:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLabel" name="lbl_status_disp_active">
-             <property name="text">
-              <string>NAN</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLabel" name="lbl_status_hdmi_dc">
-             <property name="text">
-              <string>NAN</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QLabel" name="lbl_status_mic_mute">
-             <property name="text">
-              <string>NAN</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QLabel" name="lbl_status_headphone_connect">
-             <property name="text">
-              <string>NAN</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="1">
-            <widget class="QLabel" name="lbl_status_reserved">
-             <property name="text">
-              <string>NAN</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="1">
-            <widget class="QLabel" name="lbl_status_tick">
-             <property name="text">
-              <string>NAN</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
         <item row="2" column="0">
-         <widget class="QLabel" name="label_10">
+         <widget class="QLabel" name="label_79">
           <property name="text">
            <string>Reserved0:</string>
           </property>
          </widget>
         </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="lbl_s2_reserved0">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_81">
+          <property name="text">
+           <string>Volume:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLabel" name="lbl_s2_volume">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_83">
+          <property name="text">
+           <string>Reserved1[5]:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLabel" name="lbl_s2_reserved1">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QLabel" name="label_85">
+          <property name="text">
+           <string>Reserved2[7]:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0">
+         <widget class="QLabel" name="label_115">
+          <property name="text">
+           <string>CalStatus:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="1">
+         <widget class="QLabel" name="lbl_s2_calstatus">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="0">
+         <widget class="QLabel" name="label_117">
+          <property name="text">
+           <string>Ready:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="1">
+         <widget class="QLabel" name="lbl_s2_ready">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="0">
+         <widget class="QLabel" name="label_119">
+          <property name="text">
+           <string>Reserved3[3]:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="1">
+         <widget class="QLabel" name="lbl_s2_reserved3">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
+        <item row="11" column="0">
+         <widget class="QLabel" name="label_121">
+          <property name="text">
+           <string>Voltage Value:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="11" column="1">
+         <widget class="QLabel" name="lbl_s2_voltVal">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
+        <item row="12" column="0">
+         <widget class="QLabel" name="label_123">
+          <property name="text">
+           <string>Voltage Reference:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="12" column="1">
+         <widget class="QLabel" name="lbl_s2_voltRef">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
+        <item row="13" column="0">
+         <widget class="QLabel" name="label_125">
+          <property name="text">
+           <string>IR Sensor:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="13" column="1">
+         <widget class="QLabel" name="lbl_s2_irSensor">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
+        <item row="14" column="0">
+         <widget class="QLabel" name="label_127">
+          <property name="text">
+           <string>Reserved4[5]:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="14" column="1">
+         <widget class="QLabel" name="lbl_s2_reserved4">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
+        <item row="15" column="0">
+         <widget class="QLabel" name="label_129">
+          <property name="text">
+           <string>Packet Sequence:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="15" column="1">
+         <widget class="QLabel" name="lbl_s2_pakSeq">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="0" colspan="2">
-         <widget class="QGroupBox" name="groupBox_2">
+         <widget class="QGroupBox" name="groupBox_24">
           <property name="title">
            <string>Buttons</string>
           </property>
-          <layout class="QFormLayout" name="formLayout_2">
+          <layout class="QFormLayout" name="formLayout_15">
            <item row="0" column="0">
-            <widget class="QLabel" name="label_2">
+            <widget class="QLabel" name="label_16">
              <property name="text">
               <string>Reserved:</string>
              </property>
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QLabel" name="lbl_button_reserved">
+            <widget class="QLabel" name="lbl_s2_btn_reserved">
              <property name="text">
-              <string>NAN</string>
+              <string>TextLabel</string>
              </property>
             </widget>
            </item>
            <item row="1" column="0">
-            <widget class="QLabel" name="label_4">
+            <widget class="QLabel" name="label_36">
              <property name="text">
               <string>Plus:</string>
              </property>
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QLabel" name="lbl_btn_plus">
+            <widget class="QLabel" name="lbl_s2_btn_plus">
              <property name="text">
-              <string>NAN</string>
+              <string>TextLabel</string>
              </property>
             </widget>
            </item>
            <item row="2" column="0">
-            <widget class="QLabel" name="label_6">
+            <widget class="QLabel" name="label_43">
              <property name="text">
               <string>Minus:</string>
              </property>
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QLabel" name="lbl_btn_minus">
+            <widget class="QLabel" name="lbl_s2_btn_minus">
              <property name="text">
-              <string>NAN</string>
+              <string>TextLabel</string>
              </property>
             </widget>
            </item>
            <item row="3" column="0">
-            <widget class="QLabel" name="label_8">
+            <widget class="QLabel" name="label_51">
              <property name="text">
               <string>Mute:</string>
              </property>
             </widget>
            </item>
            <item row="3" column="1">
-            <widget class="QLabel" name="lbl_btn_mute">
+            <widget class="QLabel" name="lbl_s2_btn_mute">
              <property name="text">
-              <string>NAN</string>
+              <string>TextLabel</string>
              </property>
             </widget>
            </item>
           </layout>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QLabel" name="lbl_reserved0">
-          <property name="text">
-           <string>NAN</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_12">
-          <property name="text">
-           <string>Volume:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="label_13">
-          <property name="text">
-           <string>Reserved1[5]:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLabel" name="lbl_volume">
-          <property name="text">
-           <string>NAN</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QLabel" name="lbl_reserved1">
-          <property name="text">
-           <string>NAN</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="0">
-         <widget class="QLabel" name="label_29">
-          <property name="text">
-           <string>Reserved2[11]:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="1">
-         <widget class="QLabel" name="lbl_reserved2">
-          <property name="text">
-           <string>NAN</string>
-          </property>
-         </widget>
-        </item>
         <item row="7" column="0" colspan="2">
-         <widget class="QGroupBox" name="groupBox_3">
+         <widget class="QGroupBox" name="groupBox_26">
           <property name="title">
-           <string>Data</string>
+           <string>Sensors</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_2">
+          <layout class="QGridLayout" name="gridLayout_13">
            <item row="0" column="0">
-            <widget class="QGroupBox" name="groupBox_4">
+            <widget class="QGroupBox" name="groupBox_27">
              <property name="title">
               <string>Data 1</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_3">
+             <layout class="QFormLayout" name="formLayout_18">
               <item row="0" column="0">
-               <widget class="QGroupBox" name="groupBox_5">
-                <property name="title">
-                 <string>Gyro</string>
+               <widget class="QLabel" name="label_87">
+                <property name="text">
+                 <string>Timestamp:</string>
                 </property>
-                <layout class="QFormLayout" name="formLayout_4">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_31">
-                   <property name="text">
-                    <string>Yaw:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QLabel" name="lbl_data1_gyro_yaw">
-                   <property name="text">
-                    <string>NAN</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="label_35">
-                   <property name="text">
-                    <string>Pitch:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QLabel" name="lbl_data1_gyro_pitch">
-                   <property name="text">
-                    <string>NAN</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="label_37">
-                   <property name="text">
-                    <string>Roll:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QLabel" name="lbl_data1_gyro_roll">
-                   <property name="text">
-                    <string>NAN</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="QGroupBox" name="groupBox_6">
+              <item row="0" column="1">
+               <widget class="QLabel" name="lbl_s2_data0_timestamp">
+                <property name="text">
+                 <string>TextLabel</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0" colspan="2">
+               <widget class="QGroupBox" name="groupBox_29">
                 <property name="title">
                  <string>Accel</string>
                 </property>
-                <layout class="QFormLayout" name="formLayout_5">
+                <layout class="QFormLayout" name="formLayout_21">
                  <item row="0" column="0">
-                  <widget class="QLabel" name="label_32">
+                  <widget class="QLabel" name="label_93">
                    <property name="text">
                     <string>X:</string>
                    </property>
                   </widget>
                  </item>
+                 <item row="0" column="1">
+                  <widget class="QLabel" name="lbl_s2_data0_accel_x">
+                   <property name="text">
+                    <string>TextLabel</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="1" column="0">
-                  <widget class="QLabel" name="label_39">
+                  <widget class="QLabel" name="label_101">
                    <property name="text">
                     <string>Y:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="1">
-                  <widget class="QLabel" name="lbl_data1_accel_x">
-                   <property name="text">
-                    <string>NAN</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="1" column="1">
-                  <widget class="QLabel" name="lbl_data1_accel_y">
+                  <widget class="QLabel" name="lbl_s2_data0_accel_y">
                    <property name="text">
-                    <string>NAN</string>
+                    <string>TextLabel</string>
                    </property>
                   </widget>
                  </item>
                  <item row="2" column="0">
-                  <widget class="QLabel" name="label_42">
+                  <widget class="QLabel" name="label_103">
                    <property name="text">
                     <string>Z:</string>
                    </property>
                   </widget>
                  </item>
                  <item row="2" column="1">
-                  <widget class="QLabel" name="lbl_data1_accel_z">
+                  <widget class="QLabel" name="lbl_s2_data0_accel_z">
                    <property name="text">
-                    <string>NAN</string>
+                    <string>TextLabel</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="1" column="0" colspan="2">
+               <widget class="QGroupBox" name="groupBox_31">
+                <property name="title">
+                 <string>Gyro</string>
+                </property>
+                <layout class="QFormLayout" name="formLayout_20">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_91">
+                   <property name="text">
+                    <string>Yaw:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLabel" name="lbl_s2_data0_gyro_yaw">
+                   <property name="text">
+                    <string>TextLabel</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_96">
+                   <property name="text">
+                    <string>Pitch:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLabel" name="lbl_s2_data0_gyro_pitch">
+                   <property name="text">
+                    <string>TextLabel</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_98">
+                   <property name="text">
+                    <string>Roll:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QLabel" name="lbl_s2_data0_gyro_roll">
+                   <property name="text">
+                    <string>TextLabel</string>
                    </property>
                   </widget>
                  </item>
@@ -1014,107 +1026,121 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QGroupBox" name="groupBox_7">
+            <widget class="QGroupBox" name="groupBox_28">
              <property name="title">
-              <string>Data 2</string>
+              <string>Data2</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_4">
+             <layout class="QFormLayout" name="formLayout_19">
               <item row="0" column="0">
-               <widget class="QGroupBox" name="groupBox_8">
-                <property name="title">
-                 <string>Gyro</string>
+               <widget class="QLabel" name="label_88">
+                <property name="text">
+                 <string>Timestamp:</string>
                 </property>
-                <layout class="QFormLayout" name="formLayout_6">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_44">
-                   <property name="text">
-                    <string>Yaw:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QLabel" name="lbl_data2_gyro_yaw">
-                   <property name="text">
-                    <string>NAN</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="label_48">
-                   <property name="text">
-                    <string>Pitch:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QLabel" name="lbl_data2_gyro_pitch">
-                   <property name="text">
-                    <string>NAN</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="label_50">
-                   <property name="text">
-                    <string>Roll:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QLabel" name="lbl_data2_gyro_roll">
-                   <property name="text">
-                    <string>NAN</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="QGroupBox" name="groupBox_9">
+              <item row="0" column="1">
+               <widget class="QLabel" name="lbl_s2_data1_timestamp">
+                <property name="text">
+                 <string>TextLabel</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0" colspan="2">
+               <widget class="QGroupBox" name="groupBox_30">
                 <property name="title">
                  <string>Accel</string>
                 </property>
-                <layout class="QFormLayout" name="formLayout_7">
+                <layout class="QFormLayout" name="formLayout_23">
                  <item row="0" column="0">
-                  <widget class="QLabel" name="label_45">
+                  <widget class="QLabel" name="label_94">
                    <property name="text">
                     <string>X:</string>
                    </property>
                   </widget>
                  </item>
                  <item row="0" column="1">
-                  <widget class="QLabel" name="lbl_data2_accel_x">
+                  <widget class="QLabel" name="lbl_s2_data1_accel_x">
                    <property name="text">
-                    <string>NAN</string>
+                    <string>TextLabel</string>
                    </property>
                   </widget>
                  </item>
                  <item row="1" column="0">
-                  <widget class="QLabel" name="label_52">
+                  <widget class="QLabel" name="label_111">
                    <property name="text">
                     <string>Y:</string>
                    </property>
                   </widget>
                  </item>
                  <item row="1" column="1">
-                  <widget class="QLabel" name="lbl_data2_accel_y">
+                  <widget class="QLabel" name="lbl_s2_data1_accel_y">
                    <property name="text">
-                    <string>NAN</string>
+                    <string>TextLabel</string>
                    </property>
                   </widget>
                  </item>
                  <item row="2" column="0">
-                  <widget class="QLabel" name="label_54">
+                  <widget class="QLabel" name="label_113">
                    <property name="text">
                     <string>Z:</string>
                    </property>
                   </widget>
                  </item>
                  <item row="2" column="1">
-                  <widget class="QLabel" name="lbl_data2_accel_z">
+                  <widget class="QLabel" name="lbl_s2_data1_accel_z">
                    <property name="text">
-                    <string>NAN</string>
+                    <string>TextLabel</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="1" column="0" colspan="2">
+               <widget class="QGroupBox" name="groupBox_32">
+                <property name="title">
+                 <string>Gyro</string>
+                </property>
+                <layout class="QFormLayout" name="formLayout_22">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_92">
+                   <property name="text">
+                    <string>Yaw:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLabel" name="lbl_s2_data1_gyro_yaw">
+                   <property name="text">
+                    <string>TextLabel</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_106">
+                   <property name="text">
+                    <string>Pitch:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLabel" name="lbl_s2_data1_gyro_pitch">
+                   <property name="text">
+                    <string>TextLabel</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_108">
+                   <property name="text">
+                    <string>Roll:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QLabel" name="lbl_s2_data1_gyro_roll">
+                   <property name="text">
+                    <string>TextLabel</string>
                    </property>
                   </widget>
                  </item>
@@ -1127,21 +1153,114 @@
           </layout>
          </widget>
         </item>
-        <item row="8" column="0">
-         <widget class="QLabel" name="label_56">
-          <property name="text">
-           <string>Reserved3[12]:</string>
+        <item row="5" column="0">
+         <widget class="QGroupBox" name="groupBox_25">
+          <property name="title">
+           <string>Status</string>
           </property>
+          <layout class="QFormLayout" name="formLayout_16">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_58">
+             <property name="text">
+              <string>Worn:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="lbl_s2_status_worn">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_62">
+             <property name="text">
+              <string>Display Active:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="lbl_s2_status_display">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_65">
+             <property name="text">
+              <string>HDMI Disconnected:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="lbl_s2_status_hdmi">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_69">
+             <property name="text">
+              <string>Mic Muted:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLabel" name="lbl_s2_status_micMute">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_71">
+             <property name="text">
+              <string>Headphones Connected:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLabel" name="lbl_s2_status_headphone">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_75">
+             <property name="text">
+              <string>Reserved:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLabel" name="lbl_s2_status_reserved">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_77">
+             <property name="text">
+              <string>Tick:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLabel" name="lbl_s2_status_tick">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
-        <item row="8" column="1">
-         <widget class="QLabel" name="lbl_reserved3">
-          <property name="text">
-           <string>NAN</string>
-          </property>
-         </widget>
-        </item>
-        <item row="9" column="0" colspan="2">
+        <item row="5" column="1">
          <widget class="QGroupBox" name="groupBox_10">
           <property name="title">
            <string>Raw Data</string>
@@ -1158,6 +1277,164 @@
             </widget>
            </item>
           </layout>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QLabel" name="lbl_s2_reserved2">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Sensors 2</string>
+       </attribute>
+       <layout class="QFormLayout" name="formLayout">
+        <item row="0" column="0" colspan="2">
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>Eular</string>
+          </property>
+          <layout class="QFormLayout" name="formLayout_2">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Yaw:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="lbl_s2_yaw">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>Pitch:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="lbl_s2_pitch">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_6">
+             <property name="text">
+              <string>Roll:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="lbl_s2_roll">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_32">
+          <property name="text">
+           <string>Status:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="lbl_s2_status">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QPushButton" name="btn_recenter">
+          <property name="text">
+           <string>Recenter</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="2">
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="title">
+           <string>Quat</string>
+          </property>
+          <layout class="QFormLayout" name="formLayout_3">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_18">
+             <property name="text">
+              <string>W:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="lbl_s2_qw">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_20">
+             <property name="text">
+              <string>X:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="lbl_s2_qx">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_22">
+             <property name="text">
+              <string>Y:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="lbl_s2_qy">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_30">
+             <property name="text">
+              <string>Z:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLabel" name="lbl_s2_qz">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QPushButton" name="btn_recalibrate">
+          <property name="text">
+           <string>Recalibrate</string>
+          </property>
          </widget>
         </item>
        </layout>
