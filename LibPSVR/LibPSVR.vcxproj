@@ -34,6 +34,21 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\Control_Frame.h" />
+    <ClInclude Include="..\include\Device_Info.h" />
+    <ClInclude Include="..\include\Device_Status.h" />
+    <ClInclude Include="..\include\morpheus.h" />
+    <ClInclude Include="..\include\psvr.h" />
+    <ClInclude Include="..\include\PSVR_Common.h" />
+    <ClInclude Include="..\include\PSVR_Lib.h" />
+    <ClInclude Include="..\include\ReportID.h" />
+    <ClInclude Include="..\include\Sensor_Frame.h" />
+    <ClInclude Include="..\include\Unsolicited_Report.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\psvr.c" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{0E039AD0-D101-4BF4-B9D1-7BF80A239EB9}</ProjectGuid>
@@ -126,59 +141,67 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\..\libusb-master\libusb;$(IncludePath)</IncludePath>
-    <SourcePath>..\..\libusb-master\libusb;$(SourcePath)</SourcePath>
-    <LibraryPath>..\..\libusb-master\Win32\Debug\lib;$(LibraryPath)</LibraryPath>
-    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)..\include;$(SolutionDir)..\3rdParty\libusb\libusb;$(IncludePath)</IncludePath>
+    <SourcePath>$(SolutionDir)..\3rdParty\libusb\libusb;$(SourcePath)</SourcePath>
+    <LibraryPath>$(SolutionDir)..\3rdParty\libusb\Win32\Debug\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)Debug\lib\</OutDir>
+    <IntDir>Build\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\..\libusb-master\libusb;$(IncludePath)</IncludePath>
-    <SourcePath>..\..\libusb-master\libusb;$(SourcePath)</SourcePath>
-    <LibraryPath>..\..\libusb-master\Win32\Debug\lib;$(LibraryPath)</LibraryPath>
-    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)..\include;$(SolutionDir)..\3rdParty\libusb\libusb;$(IncludePath)</IncludePath>
+    <SourcePath>$(SolutionDir)..\3rdParty\libusb\libusb;$(SourcePath)</SourcePath>
+    <LibraryPath>$(SolutionDir)..\3rdParty\libusb\Win32\Debug\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)Debug\dll\</OutDir>
+    <IntDir>Build\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\..\libusb-master\libusb;$(IncludePath)</IncludePath>
-    <SourcePath>..\..\libusb-master\libusb;$(SourcePath)</SourcePath>
-    <LibraryPath>..\..\libusb-master\x64\Debug\lib;$(LibraryPath)</LibraryPath>
-    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)..\include;$(SolutionDir)..\3rdParty\libusb\libusb;$(IncludePath)</IncludePath>
+    <SourcePath>$(SolutionDir)..\3rdParty\libusb\libusb;$(SourcePath)</SourcePath>
+    <LibraryPath>$(SolutionDir)..\3rdParty\libusb\x64\Debug\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)$(Platform)\Debug\lib\</OutDir>
+    <IntDir>Build\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\..\libusb-master\libusb;$(IncludePath)</IncludePath>
-    <SourcePath>..\..\libusb-master\libusb;$(SourcePath)</SourcePath>
-    <LibraryPath>..\..\libusb-master\x64\Debug\lib;$(LibraryPath)</LibraryPath>
-    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)..\include;$(SolutionDir)..\3rdParty\libusb\libusb;$(IncludePath)</IncludePath>
+    <SourcePath>$(SolutionDir)..\3rdParty\libusb\libusb;$(SourcePath)</SourcePath>
+    <LibraryPath>$(SolutionDir)..\3rdParty\libusb\x64\Debug\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)$(Platform)\Debug\dll\</OutDir>
+    <IntDir>Build\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\..\libusb-master\libusb;$(IncludePath)</IncludePath>
-    <SourcePath>..\..\libusb-master\libusb;$(SourcePath)</SourcePath>
-    <LibraryPath>..\..\libusb-master\Win32\Release\lib;$(LibraryPath)</LibraryPath>
-    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)..\include;$(SolutionDir)..\3rdParty\libusb\libusb;$(IncludePath)</IncludePath>
+    <SourcePath>$(SolutionDir)..\3rdParty\libusb\libusb;$(SourcePath)</SourcePath>
+    <LibraryPath>$(SolutionDir)..\3rdParty\libusb\Win32\Release\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)Release\lib\</OutDir>
+    <IntDir>Build\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release DLL|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\..\libusb-master\libusb;$(IncludePath)</IncludePath>
-    <SourcePath>..\..\libusb-master\libusb;$(SourcePath)</SourcePath>
-    <LibraryPath>..\..\libusb-master\Win32\Release\lib;$(LibraryPath)</LibraryPath>
-    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)..\include;$(SolutionDir)..\3rdParty\libusb\libusb;$(IncludePath)</IncludePath>
+    <SourcePath>$(SolutionDir)..\3rdParty\libusb\libusb;$(SourcePath)</SourcePath>
+    <LibraryPath>$(SolutionDir)..\3rdParty\libusb\Win32\Release\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)Release\dll\</OutDir>
+    <IntDir>Build\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\..\libusb-master\libusb;$(IncludePath)</IncludePath>
-    <SourcePath>..\..\libusb-master\libusb;$(SourcePath)</SourcePath>
-    <LibraryPath>..\..\libusb-master\x64\Release\lib;$(LibraryPath)</LibraryPath>
-    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)..\include;$(SolutionDir)..\3rdParty\libusb\libusb;$(IncludePath)</IncludePath>
+    <SourcePath>$(SolutionDir)..\3rdParty\libusb\libusb;$(SourcePath)</SourcePath>
+    <LibraryPath>$(SolutionDir)..\3rdParty\libusb\x64\Release\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)$(Platform)\Release\lib\</OutDir>
+    <IntDir>Build\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release DLL|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\..\libusb-master\libusb;$(IncludePath)</IncludePath>
-    <SourcePath>..\..\libusb-master\libusb;$(SourcePath)</SourcePath>
-    <LibraryPath>..\..\libusb-master\x64\Release\lib;$(LibraryPath)</LibraryPath>
-    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)..\include;$(SolutionDir)..\3rdParty\libusb\libusb;$(IncludePath)</IncludePath>
+    <SourcePath>$(SolutionDir)..\3rdParty\libusb\libusb;$(SourcePath)</SourcePath>
+    <LibraryPath>$(SolutionDir)..\3rdParty\libusb\x64\Release\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)$(Platform)\Release\dll\</OutDir>
+    <IntDir>Build\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -316,21 +339,6 @@
       <AdditionalDependencies>libusb-1.0.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="..\Device_Info.h" />
-    <ClInclude Include="..\Device_Status.h" />
-    <ClInclude Include="..\Control_Frame.h" />
-    <ClInclude Include="..\PSVR_Lib.h" />
-    <ClInclude Include="..\Unsolicited_Report.h" />
-    <ClInclude Include="..\morpheus.h" />
-    <ClInclude Include="..\psvr.h" />
-    <ClInclude Include="..\PSVR_Common.h" />
-    <ClInclude Include="..\ReportID.h" />
-    <ClInclude Include="..\Sensor_Frame.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\psvr.c" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

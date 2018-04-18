@@ -5,17 +5,17 @@ currDir=$(shell pwd)
 all: shared
 
 shared:
-	$(CC) -shared -DPSVR_DLL -DPSVR_EXPORT_DLL -o libpsvr.so -fPIC psvr.c $(libusb)
+	$(CC) -shared -DPSVR_DLL -DPSVR_EXPORT_DLL -I"./include" -o libpsvr.so -fPIC src/psvr.c $(libusb)
 
 lib:
-	$(CC) -c psvr.c $(libusb)
+	$(CC) -c -I"./include" src/psvr.c $(libusb)
 	ar -cvq libpsvr.a psvr.o
 
 example:
-	$(CC) LibPSVR_Example/example.c -DPSVR_DLL -I"$(currDir)" -L"$(currDir)" -lpsvr $(libusb) -o example
+	$(CC) LibPSVR/LibPSVR_Example/example.c -DPSVR_DLL -I"./include" -L"$(currDir)" -lpsvr $(libusb) -o example
 
 example-lib:
-	$(CC) LibPSVR_Example/example.c -I"$(currDir)" -L"$(currDir)" -lpsvr $(libusb) -o example
+	$(CC) LibPSVR/LibPSVR_Example/example.c -I"./include" -L"$(currDir)" -lpsvr $(libusb) -o example
 
 clean: clean-shared
 

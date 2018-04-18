@@ -39,9 +39,7 @@ $ sudo kextunload -b com.apple.driver.usb.IOUSBHostHIDDevice
 ```
 
 ## Windows
-Requires the latest libusb to be installed.  
-Paths are set to be one folder outside of master folder with the folder name of "libusb-master".  
-This can be changed if you wish.  
+Requires the latest libusb to be installed.
 To compile, use the solution in the LibPSVR folder.  
 Solution file is for Visual Studio 2017.  
   
