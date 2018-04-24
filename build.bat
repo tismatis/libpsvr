@@ -14,7 +14,7 @@ goto exit
 :build
 echo "Building project"
 cd LibPSVR
-make lib
+make
 tree /f
 goto:eof
 
