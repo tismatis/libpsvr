@@ -35,20 +35,17 @@ before_build:
 - cmd: |-
     choco install make
     make --version
-    # clean.bat
-    # generate.bat
 
 build_script:
-  # c:\projects\OpenPSVR\build.bat
+    cd LibPSVR
+    make lib
+    tree /f
 
 after_build:
-  # ps: $root = Resolve-Path .\build\Win64\openpsvr; [IO.Directory]::GetFiles($root.Path, '*.*', 'AllDirectories') | % { Push-AppveyorArtifact $_ -FileName $_.Substring($root.Path.Length + 1) -DeploymentName to-publish }
+    # ps: $root = Resolve-Path .\build\Win64\openpsvr; [IO.Directory]::GetFiles($root.Path, '*.*', 'AllDirectories') | % { Push-AppveyorArtifact $_ -FileName $_.Substring($root.Path.Length + 1) -DeploymentName to-publish }
 
 only_commits:
   files:
     - CMakeLists.txt
     - appveyor.yml
-    - build.bat
-    - clean.bat
-    - generate.bat
     - src/
