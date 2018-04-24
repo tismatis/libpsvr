@@ -33,6 +33,7 @@ set(LIBUSB_REQ_LIB ${THIRD_PARTY}/libusb/x64/Release/dll/libusb-1.0.lib)
 target_link_libraries(OpenPSVR ${OPENVR_REQ_LIB}
                                ${LIBPSVR_REQ_LIB}
 							   ${LIBUSB_REQ_LIB}
+)
 							   
 # Shared architecture label used for install folder locations
 if (${CMAKE_C_SIZEOF_DATA_PTR} EQUAL 8)
