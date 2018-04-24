@@ -33,6 +33,7 @@ install:
 
 before_build:
 - cmd: |-
+    choco install make
     make --version
     # clean.bat
     # generate.bat
