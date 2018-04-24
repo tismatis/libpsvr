@@ -34,6 +34,7 @@ install:
 before_build:
 - cmd: |-
     choco install make
+    choco install gcc
     make --version
 
 build_script:
