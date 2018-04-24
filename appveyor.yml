@@ -33,9 +33,9 @@ install:
 
 before_build:
 - cmd: |-
-    choco install mingw
-    choco install make
-    make --version
+    cmake --version
+    clean.bat
+    generate.bat
 
 build_script:
     c:\projects\libpsvr\build.bat
