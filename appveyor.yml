@@ -37,9 +37,7 @@ before_build:
     make --version
 
 build_script:
-    cd LibPSVR
-    make lib
-    tree /f
+    c:\projects\libpsvr\build.bat
 
 after_build:
     # ps: $root = Resolve-Path .\build\Win64\openpsvr; [IO.Directory]::GetFiles($root.Path, '*.*', 'AllDirectories') | % { Push-AppveyorArtifact $_ -FileName $_.Substring($root.Path.Length + 1) -DeploymentName to-publish }
