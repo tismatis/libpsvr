@@ -46,4 +46,5 @@ only_commits:
   files:
     - CMakeLists.txt
     - appveyor.yml
+    - build.bat
     - src/
