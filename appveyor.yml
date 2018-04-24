@@ -33,8 +33,7 @@ install:
 
 before_build:
 - cmd: |-
-    choco install make
-    choco install gcc
+    choco install mingw
     make --version
 
 build_script:
