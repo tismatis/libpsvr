@@ -13,7 +13,7 @@ goto exit
 ::Function that builds the project using make
 :build
 echo "Building project"
-make
+cmake --build generated --target INSTALL --config RELEASE
 tree /f
 goto:eof
 
