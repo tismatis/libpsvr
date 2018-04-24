@@ -13,7 +13,6 @@ goto exit
 ::Function that builds the project using make
 :build
 echo "Building project"
-cd LibPSVR
 make
 tree /f
 goto:eof
