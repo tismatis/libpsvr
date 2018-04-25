@@ -4,12 +4,12 @@ branches:
   - add-ci-release
 clone_folder: c:\projects\libpsvr
 image:
-- Visual Studio 2017
+  - Visual Studio 2017
 configuration:
-- Release
-- Debug
+  - Release
+  - Debug
 platform:
-- x64
+  - x64
 environment:
   matrix:
   - arch: Win64
