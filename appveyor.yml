@@ -41,7 +41,7 @@ build_script:
     c:\projects\libpsvr\build.bat
 
 after_build:
-    ps: $root = Resolve-Path .\build\Win64\libpsvr; [IO.Directory]::GetFiles($root.Path, '*.*', 'AllDirectories') | % { Push-AppveyorArtifact $_ -FileName $_.zip -DeploymentName libpsvr -Type zip }
+    ps: $root = Resolve-Path .\build\Win64\libpsvr; % { Push-AppveyorArtifact libpsvr.dll -FileName libpsvr.zip -DeploymentName libpsvr-{version}-{configuration} -Type zip }
 
 only_commits:
   files:
