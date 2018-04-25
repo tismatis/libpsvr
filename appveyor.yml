@@ -32,10 +32,10 @@ install:
   git submodule update --init
 
 before_build:
-- cmd: |-
-    cmake --version
-    clean.bat
-    generate.bat
+    - cmd: |-
+        cmake --version
+        clean.bat
+        generate.bat
 
 build_script:
     c:\projects\libpsvr\build.bat
@@ -47,8 +47,8 @@ after_build:
     # Upload dll artifact
 artifacts: #
     - path: .\build\Win64\libpsvr\libpsvr.zip
-    - name: libpsvr
-    - type: zip
+      name: libpsvr
+      type: zip
     
 only_commits:
   files:
