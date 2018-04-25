@@ -27,6 +27,10 @@ target_include_directories(libpsvr PUBLIC ${LIBUSB_INCL_DIRS})
 # Set libpsvr's required 3rd party libusb library
 target_link_libraries(libpsvr ${LIBUSB_REQ_LIB})
 
+# Set preprocessor directive so it builds a lib api instead of a dll
+add_definitions(-DPSVR_DLL)
+add_definitions(-DPSVR_EXPORT_DLL)
+
 set_target_properties(libpsvr PROPERTIES VERSION ${PROJECT_VERSION})
 							   
 # Shared architecture label used for install folder locations
@@ -49,4 +53,7 @@ else()
 endif()
 
 # Define libpsvr install target
-install(TARGETS libpsvr RUNTIME DESTINATION ${TARGET_BUILD_DIR}/${ARCH_LABEL}/libpsvr)
+install(TARGETS libpsvr 
+        RUNTIME DESTINATION ${TARGET_BUILD_DIR}/${ARCH_LABEL}/libpsvr
+		ARCHIVE DESTINATION ${TARGET_BUILD_DIR}/${ARCH_LABEL}/libpsvr
+)
