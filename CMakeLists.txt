@@ -1,62 +1,39 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.2)
+project(libpsvr VERSION 0.1.0)
+include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeUtils.txt)
+include(ExternalProject)
 
-# initialise variables
-set(PROJECT_DIR ${CMAKE_CURRENT_LIST_DIR})
-set(PROJECT_SRC_DIR ${PROJECT_DIR}/src)
-set(PROJECT_INCL_DIR ${PROJECT_DIR}/include)
-set(TARGET_BUILD_DIR ${PROJECT_DIR}/build)
-set(THIRD_PARTY ${PROJECT_DIR}/3rdParty)
+set(ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
+set(CMAKE_CXX_STANDARD_17)
+set(CMAKE_CXX_STANDARD_REQUIRED_ON)
+IF (NOT MSVC)
+    set(CMAKE_CXX_FLAGS "-std=c++11")
+    IF (NOT CMAKE_COMPILER_IS_GNUCXX)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+    ENDIF()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-switch")
+ENDIF()
 
-# Set OpenPSVR's project source files
-add_library(OpenPSVR SHARED ${PROJECT_INCL_DIR}/Control_Frame.h
-                            ${PROJECT_INCL_DIR}/Device_Info.h
-                            ${PROJECT_INCL_DIR}/Device_Status.h
-                            ${PROJECT_INCL_DIR}/morpheus.h
-                            ${PROJECT_INCL_DIR}/psvr.h
-                            ${PROJECT_INCL_DIR}/PSVR_Common.h
-                            ${PROJECT_INCL_DIR}/PSVR_Lib.h
-                            ${PROJECT_INCL_DIR}/ReportID.h
-                            ${PROJECT_INCL_DIR}/Sensor_Frame.h
-                            ${PROJECT_INCL_DIR}/Unsolicited_Report.h
-                            ${PROJECT_SRC_DIR}/psvr.c
-)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# Set OpenPSVR's required 3rdParty include directories
-set(LIBUSB_INCL_DIRS ${THIRD_PARTY}/libusb/libusb)
-target_include_directories(OpenPSVR PUBLIC ${LIBUSB_INCL_DIRS})
-
-# TODO This needs to be sorted out using Find
-# Set OpenPSVR's required 3rdParty libraries
-set(OPENVR_REQ_LIB ${THIRD_PARTY}/openvr/lib/win64/openvr_api.lib)
-set(LIBPSVR_REQ_LIB ${THIRD_PARTY}/libpsvr/LibPSVR/x64/Release/lib/LibPSVR.lib)
-set(LIBUSB_REQ_LIB ${THIRD_PARTY}/libusb/x64/Release/dll/libusb-1.0.lib)
-target_link_libraries(OpenPSVR ${OPENVR_REQ_LIB}
-                               ${LIBPSVR_REQ_LIB}
-							   ${LIBUSB_REQ_LIB}
-)
-							   
-# Shared architecture label used for install folder locations
+# Configure and build external libusb projects based on os architecture
 if (${CMAKE_C_SIZEOF_DATA_PTR} EQUAL 8)
         if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
                 set(ARCH_LABEL "Win64")
+				build_external_project(libusb ${ROOT_DIR}/deps https://github.com/libusb/libusb/releases/download/v1.0.22/libusb-1.0.22.7z)
+				set(LIBUSB_REQ_LIB ${ROOT_DIR}/deps/libusb/src/libusb/MS64/dll/libusb-1.0.lib)
+				set(LIBUSB_INCL_DIRS ${ROOT_DIR}/deps/libusb/src/libusb/include/libusb-1.0)
+				
         elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
                 set(ARCH_LABEL "OSX64")
+				# TODO
+				build_external_project(libusb ${ROOT_DIR}/deps https://github.com/libusb/libusb/releases/download/v1.0.22/libusb-1.0.22.tar.bz2)
         else()
-                set(ARCH_LABEL "Linux64")
-        endif()
-else()
-        if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-                set(ARCH_LABEL "Win32")
-        elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-                set(ARCH_LABEL "OSX32")
-        else()
-                set(ARCH_LABEL "Linux32")
+				set(ARCH_LABEL "Linux64")
+				# TODO
+				build_external_project(libusb ${ROOT_DIR}/deps https://github.com/libusb/libusb/releases/download/v1.0.22/libusb-1.0.22.tar.bz2)
+
         endif()
 endif()
 
-# Define OpenPSVR install target
-install(TARGETS OpenPSVR
-        RUNTIME DESTINATION ${TARGET_BUILD_DIR}/${ARCH_LABEL}/libpsvr
-        LIBRARY DESTINATION ${TARGET_BUILD_DIR}/${ARCH_LABEL}/libpsvr/lib
-        ARCHIVE DESTINATION ${TARGET_BUILD_DIR}/${ARCH_LABEL}/libpsvr/lib
-)
+add_subdirectory(src)

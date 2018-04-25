@@ -14,7 +14,6 @@ goto exit
 :build
 echo "Building project"
 cmake --build generated --target INSTALL --config RELEASE
-tree /f
 goto:eof
 
 :handleError

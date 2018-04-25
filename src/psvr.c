@@ -15,10 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "PSVR_Common.h"
+#include "../include/PSVR_Common.h"
 
-#include "morpheus.h"
-#include "psvr.h"
+#include "../include/morpheus.h"
+#include "../include/psvr.h"
 
 struct psvr_context {
 	libusb_context *usb;
