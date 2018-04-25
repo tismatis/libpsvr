@@ -40,9 +40,15 @@ before_build:
 build_script:
     c:\projects\libpsvr\build.bat
 
-after_build: # zip and upload dll artifact
-    - ps: $root = Resolve-Path .\build\Win64\libpsvr; { 7z a .\build\Win64\libpsvr\libpsvr.zip .\build\Win64\libpsvr\libpsvr.dll }
-    - ps: $root = Resolve-Path .\build\Win64\libpsvr; { Push-AppveyorArtifact .\build\Win64\libpsvr\libpsvr.zip -FileName libpsvr.zip -DeploymentName libpsvr -Type zip }
+#Zip libpsvr.dll
+after_build:
+    - 7z a .\build\Win64\libpsvr\libpsvr.zip .\build\Win64\libpsvr\libpsvr.dll
+
+    # Upload dll artifact
+artifacts: #
+    - path: .\build\Win64\libpsvr\libpsvr.zip
+    - name: libpsvr
+    - type: zip
     
 only_commits:
   files:
