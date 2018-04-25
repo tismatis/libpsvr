@@ -42,7 +42,7 @@ build_script:
 
 #Zip libpsvr.dll
 after_build:
-    7z a .\build\Win64\libpsvr\libpsvr.zip .\build\Win64\libpsvr\libpsvr.dll
+    7z a .\build\Win64\libpsvr\libpsvr.zip .\build\Win64\libpsvr\libpsvr.dll .\include\*.h
 
     # Upload dll artifact
 artifacts: #
