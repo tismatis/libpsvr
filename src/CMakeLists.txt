@@ -55,5 +55,6 @@ endif()
 # Define libpsvr install target
 install(TARGETS libpsvr 
         RUNTIME DESTINATION ${TARGET_BUILD_DIR}/${ARCH_LABEL}/libpsvr
+        LIBRARY DESTINATION ${TARGET_BUILD_DIR}/${ARCH_LABEL}/libpsvr
 		ARCHIVE DESTINATION ${TARGET_BUILD_DIR}/${ARCH_LABEL}/libpsvr
 )
