@@ -6,7 +6,7 @@ branches:
 addons:
   artifacts: true
     paths:
-      - $HOME/libpsvr/build/Linux64/libpsvr/libpsvr.so		
+      - $TRAVIS_BUILD_DIR/build/libpsvr-linux64.tar.gz
   apt:
     packages: cmake
 before_install:
