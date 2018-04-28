@@ -151,7 +151,7 @@ int psvr_open_ex(psvr_context **ctx, int interfaces_to_claim) {
 		goto error;
 	}
 
-	libusb_set_debug(_ctx->usb, 3);
+	libusb_set_option(_ctx->usb, 3);
 
 	_ctx->usb_handle = libusb_open_device_with_vid_pid(
 		_ctx->usb,
