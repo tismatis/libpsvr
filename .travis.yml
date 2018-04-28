@@ -5,6 +5,7 @@ branches:
     - add-ci-release
 addons:
   artifacts: true
+    s3_region: "ap-southeast-2"
     paths:
       - $TRAVIS_BUILD_DIR/build/libpsvr-linux64.tar.gz
   apt:
