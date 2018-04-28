@@ -21,39 +21,39 @@ for:
          - platform: Visual Studio 2017
       # skip unsupported combinations
       
-      before_build:
-          - cmd: |-
-              cmake --version
-              clean.bat
-              generate.bat
-      
-      build_script:
-          c:\projects\libpsvr\build.bat
-      
-      #Zip libpsvr.lib
-      after_build:
-          7z a .\build\Win64\libpsvr\libpsvr.zip .\build\Win64\libpsvr\libpsvr.lib -r .\include\*
-      
-      # Upload zip artifact
-      artifacts: #
-          - path: .\build\Win64\libpsvr\libpsvr.zip
-            name: libpsvr
-            type: zip
+    before_build:
+        - cmd: |-
+            cmake --version
+            clean.bat
+            generate.bat
+    
+    build_script:
+        c:\projects\libpsvr\build.bat
+    
+    #Zip libpsvr.lib
+    after_build:
+        7z a .\build\Win64\libpsvr\libpsvr.zip .\build\Win64\libpsvr\libpsvr.lib -r .\include\*
+    
+    # Upload zip artifact
+    artifacts: #
+        - path: .\build\Win64\libpsvr\libpsvr.zip
+          name: libpsvr
+          type: zip
   
   - 
     matrix:
       only:
          - platform: Ubuntu
-      environment:
-          - arch: Linux64
-      before_build:
-        - sh: |-
-            cmake --version
-            clean.sh
-            generate.sh
-    
-      build_script:
-        build.sh
+    environment:
+      arch: Linux64
+    before_build:
+      - sh: |-
+          cmake --version
+          clean.sh
+          generate.sh
+  
+    build_script:
+      build.sh
   
   
 # Commit triggers   
