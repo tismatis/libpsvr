@@ -1,7 +1,8 @@
 language: cpp
 branches:
   only:
-    -add-ci-release
+    - master
+    - add-ci-release
 addons:
   apt:
     packages: cmake
