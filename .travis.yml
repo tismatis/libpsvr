@@ -4,6 +4,9 @@ branches:
     - master
     - add-ci-release
 addons:
+  artifacts: true
+    paths:
+      - $HOME/libpsvr/build/Linux64/libpsvr/libpsvr.so		
   apt:
     packages: cmake
 before_install:
@@ -13,3 +16,6 @@ before_install:
 script:
   - cd $TRAVIS_BUILD_DIR
   - ./build.sh
+after_success:
+  - cd $TRAVIS_BUILD_DIR
+  - tar -czvf libpsvr-linux64.tar.gz build/Linux64 include
