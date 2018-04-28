@@ -5,6 +5,7 @@ branches:
 clone_folder: c:\projects\libpsvr
 image:
   - Visual Studio 2017
+  - Ubuntu
 configuration:
   - Release
   - Debug
@@ -33,13 +34,18 @@ before_build:
         cmake --version
         clean.bat
         generate.bat
+    - sh: |-
+        cmake --version
+        clean.sh
+        generate.sh
 
 build_script:
-    c:\projects\libpsvr\build.bat
+    - cmd: c:\projects\libpsvr\build.bat
+    - sh: build.sh
 
 #Zip libpsvr.lib
 after_build:
-    7z a .\build\Win64\libpsvr\libpsvr.zip .\build\Win64\libpsvr\libpsvr.lib -r .\include\*
+    -cmd: 7z a .\build\Win64\libpsvr\libpsvr.zip .\build\Win64\libpsvr\libpsvr.lib -r .\include\*
 
 # Upload zip artifact
 artifacts: #
