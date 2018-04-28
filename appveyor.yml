@@ -5,58 +5,48 @@ branches:
 clone_folder: c:\projects\libpsvr
 image:
   - Visual Studio 2017
-  - ubuntu
 configuration:
   - Release
   - Debug
+platform:
+  - x64
 environment:
-  arch: Win64  
+  matrix:
+  - arch: Win64
+  # - arch: #does not work, Release|x64 not a valid target
 matrix:
   fast_finish: true
+  
+# skip unsupported combinations
+init:
+  - set arch=
+  - if "%arch%"=="Win64" ( set arch= Win64)
+  - echo %arch%
+  - echo %APPVEYOR_BUILD_WORKER_IMAGE%
+  - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" ( set generator="Visual Studio 15 2017%arch%" )
+  - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2015" ( set generator="Visual Studio 14 2015%arch%" )
+  - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2013" ( set generator="Visual Studio 12 2013%arch%" )
+  - echo %generator%
 
-for:
-  - 
-    matrix:
-      only:
-         - platform: Visual Studio 2017
-      # skip unsupported combinations
-      
-    before_build:
-        - cmd: |-
-            cmake --version
-            clean.bat
-            generate.bat
+before_build:
+    - cmd: |-
+        cmake --version
+        clean.bat
+        generate.bat
+
+build_script:
+    c:\projects\libpsvr\build.bat
+
+#Zip libpsvr.lib
+after_build:
+    7z a .\build\Win64\libpsvr\libpsvr.zip .\build\Win64\libpsvr\libpsvr.lib -r .\include\*
+
+# Upload zip artifact
+artifacts: #
+    - path: .\build\Win64\libpsvr\libpsvr.zip
+      name: libpsvr
+      type: zip
     
-    build_script:
-        c:\projects\libpsvr\build.bat
-    
-    #Zip libpsvr.lib
-    after_build:
-        7z a .\build\Win64\libpsvr\libpsvr.zip .\build\Win64\libpsvr\libpsvr.lib -r .\include\*
-    
-    # Upload zip artifact
-    artifacts: #
-        - path: .\build\Win64\libpsvr\libpsvr.zip
-          name: libpsvr
-          type: zip
-  
-  - 
-    matrix:
-      only:
-         - platform: Ubuntu
-    environment:
-      arch: Linux64
-    before_build:
-      - sh: |-
-          cmake --version
-          clean.sh
-          generate.sh
-  
-    build_script:
-      build.sh
-  
-  
-# Commit triggers   
 only_commits:
   files:
     - CMakeLists.txt
