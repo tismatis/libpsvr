@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.2)
 project(libpsvr VERSION 0.1.0)
-include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeUtils.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/CMakeUtils.txt)
 include(ExternalProject)
 
 set(ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
