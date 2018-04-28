@@ -17,7 +17,7 @@ for:
 - # Windows Recipe
   matrix:
   only:
-     platform: Visual Studio 2017
+     - platform: Visual Studio 2017
   # skip unsupported combinations
   init:
     - set arch=
@@ -51,7 +51,7 @@ for:
 - # Ubuntu Recipe
   matrix:
   only:
-     platform: Ubuntu
+     - platform: Ubuntu
   environment:
       - arch: Linux64
   before_build:
