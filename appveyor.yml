@@ -10,7 +10,7 @@ configuration:
   - Release
   - Debug
 environment:
-  - arch: Win64  
+  arch: Win64  
 matrix:
   fast_finish: true
 
