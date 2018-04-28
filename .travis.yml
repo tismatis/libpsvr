@@ -4,11 +4,12 @@ branches:
     - master
     - add-ci-release
 addons:
-  - artifacts: true
-      s3_region: "ap-southeast-2"
-      paths:
-        - $TRAVIS_BUILD_DIR/build/libpsvr-linux64.tar.gz
-      debug: true
+  artifacts: true
+    s3_region: "ap-southeast-2"
+    paths:
+      - $(git ls-files -o | tr "\n" ":")
+      - $TRAVIS_BUILD_DIR/build/libpsvr-linux64.tar.gz
+    debug: true
 before_install:
   - sudo apt-get update && sudo apt-get install libudev-dev
   - cd $TRAVIS_BUILD_DIR
