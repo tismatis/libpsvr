@@ -23,3 +23,8 @@
 /psvr.o
 /libpsvr.a
 /Data Viewer/glm
+
+build
+deps
+generated
+.project

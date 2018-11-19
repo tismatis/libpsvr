@@ -15,10 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "PSVR_Common.h"
+#include "../include/PSVR_Common.h"
 
-#include "morpheus.h"
-#include "psvr.h"
+#include "../include/morpheus.h"
+#include "../include/psvr.h"
 
 struct psvr_context {
 	libusb_context *usb;
@@ -151,7 +151,7 @@ int psvr_open_ex(psvr_context **ctx, int interfaces_to_claim) {
 		goto error;
 	}
 
-	libusb_set_debug(_ctx->usb, 3);
+	libusb_set_option(_ctx->usb, 3);
 
 	_ctx->usb_handle = libusb_open_device_with_vid_pid(
 		_ctx->usb,
