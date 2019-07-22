@@ -41,7 +41,7 @@ after_build:
     7z a .\build\Win64\libpsvr\libpsvr-"%APPVEYOR_REPO_TAG_NAME%".zip .\build\Win64\libpsvr\libpsvr.lib -r .\include\*
 
 # Upload zip artifact
-artifacts: #
+artifacts:
     - path: .\build\Win64\libpsvr\libpsvr-*.zip
       name: libpsvr-*
       type: zip
@@ -56,7 +56,7 @@ deploy:
     # Deploy to GitHub Releases
   - provider: GitHub
     release: $(appveyor_repo_tag_name)
-    artifact: libpsvr-*  #this should be the same as a path in artifact
+    artifact: libpsvr-*  # this should be the same as a path in artifact
     draft: true
     prerelease: false
     auth_token:
