@@ -33,18 +33,17 @@ before_build:
         cmake --version
         clean.bat
         generate.bat
-
 build_script:
     c:\projects\libpsvr\build.bat
 
 #Zip libpsvr.lib
 after_build:
-    7z a .\build\Win64\libpsvr\libpsvr.zip .\build\Win64\libpsvr\libpsvr.lib -r .\include\*
+    7z a .\build\Win64\libpsvr\libpsvr-"%APPVEYOR_REPO_TAG_NAME%".zip .\build\Win64\libpsvr\libpsvr.lib -r .\include\*
 
 # Upload zip artifact
 artifacts: #
-    - path: .\build\Win64\libpsvr\libpsvr.zip
-      name: libpsvr
+    - path: .\build\Win64\libpsvr\libpsvr-*.zip
+      name: libpsvr-*
       type: zip
     
 only_commits:
@@ -53,15 +52,15 @@ only_commits:
     - appveyor.yml
     - build.bat
     - src/
-
 deploy:
     # Deploy to GitHub Releases
   - provider: GitHub
-    release: libpsvr-$(appveyor_repo_tag_name)
-    artifact:  .\build\Win64\libpsvr\libpsvr.zip    #this should be the same as a path in artifact
-    draft: false
+    release: $(appveyor_repo_tag_name)
+    artifact: libpsvr-*  #this should be the same as a path in artifact
+    draft: true
     prerelease: false
     auth_token:
-        secure: R1VvzYjzOxJT4J57Fw/rY7IrsMV0j8eH/46CmT7xr/jEmqQ39ITk78vBsyUHar6v  #encrypted secure token
+        secure: R1VvzYjzOxJT4J57Fw/rY7IrsMV0j8eH/46CmT7xr/jEmqQ39ITk78vBsyUHar6v
     on:
-     appveyor_repo_tag: true       # deploy on tag push only
+     APPVEYOR_REPO_TAG: true       # deploy on tag push only
+     configuration: Release
