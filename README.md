@@ -1,7 +1,7 @@
 #LibPSVR
 C library for Morpheus (Playstation VR). Tested with Ubuntu 15.10 + libusb-1.0.20.
 
-## Build [![Build Status](https://travis-ci.org/SuperEvenSteven/libpsvr.svg?branch=add-ci-release)](https://travis-ci.org/SuperEvenSteven/libpsvr) [![Build status](https://ci.appveyor.com/api/projects/status/4vm87qp4bp1se3j9?svg=true)](https://ci.appveyor.com/project/SuperEvenSteven/libpsvr) [![Download snapshot](https://img.shields.io/badge/download-snapshot-brightgreen.svg)](https://ci.appveyor.com/api/projects/SuperEvenSteven/libpsvr/artifacts/build/Win64/libpsvr/libpsvr.zip?branch=add-ci-release&job=Environment%3A+arch%3DWin64%3B+Configuration%3A+Release)
+## Build [![Build Status](https://travis-ci.org/SuperEvenSteven/libpsvr.svg?branch=add-ci-release)](https://travis-ci.org/SuperEvenSteven/libpsvr) [![Build status](https://ci.appveyor.com/api/projects/status/vx3agfwcxjxogkcg/branch/master?svg=true)](https://ci.appveyor.com/project/SuperEvenSteven/libpsvr) [![Download snapshot](https://img.shields.io/badge/download-snapshot-brightgreen.svg)](https://ci.appveyor.com/api/projects/SuperEvenSteven/libpsvr/artifacts/build/Win64/libpsvr/libpsvr.zip?branch=add-ci-release&job=Environment%3A+arch%3DWin64%3B+Configuration%3A+Release)
 ##### dll/shared object
 ```
 $ make
