@@ -62,6 +62,6 @@ deploy:
     draft: false
     prerelease: false
     auth_token:
-        secure: %GITHUB_TOKEN%
+        secure: "%GITHUB_TOKEN%"
     on:
      appveyor_repo_tag: true       # deploy on tag push only
