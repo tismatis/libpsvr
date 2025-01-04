@@ -16,7 +16,7 @@ IF NOT EXIST %PROJECT_ROOT%\generated mkdir %PROJECT_ROOT%\generated
 pushd %PROJECT_ROOT%\generated
 echo "Rebuilding Project files..."
 echo "Running cmake in %PROJECT_ROOT%"
-cmake .. -G "Visual Studio 15 2017 Win64"
+cmake .. -G "Visual Studio 17 2022"
 popd
 goto:eof
 
